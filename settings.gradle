@@ -6,7 +6,7 @@ include(
         "cash",
         "chat",
         "market",
-        "member",
+        "user",
         "product",
         "settlement"
 )
