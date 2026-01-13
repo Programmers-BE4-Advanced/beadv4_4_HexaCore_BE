@@ -1,5 +1,6 @@
-package com.back.common.domain;
+package com.back.common.entity;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -10,13 +11,13 @@ import java.time.LocalDateTime;
 
 @Getter
 @SuperBuilder
-@NoArgsConstructor
-public class MongoBaseEntity {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public abstract class MongoBaseEntity {
     @CreatedDate
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
 
     private LocalDateTime deletedAt;
 
