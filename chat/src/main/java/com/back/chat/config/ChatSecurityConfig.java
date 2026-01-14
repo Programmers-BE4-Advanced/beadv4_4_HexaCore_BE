@@ -29,9 +29,11 @@ public class ChatSecurityConfig {
 
 
                 .authorizeHttpRequests(auth -> auth
+                        /*
                         .requestMatchers(
                                 "/api/chat/**"
-                        ).authenticated()
+                        ).authenticated()       인증필터 구현되기전까지.
+                         */
                         .anyRequest().permitAll()
                 );
 

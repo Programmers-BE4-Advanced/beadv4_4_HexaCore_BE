@@ -3,6 +3,7 @@ package com.back.chat.adapter.in;
 import com.back.chat.app.ChatFacade;
 import com.back.chat.dto.request.ChatRoomEnterRequestDto;
 import com.back.chat.dto.response.ChatRoomEnterResponseDto;
+import com.back.chat.mapper.ChatRoomMapper;
 import com.back.common.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,11 +24,8 @@ public class ChatController {
     @PostMapping("/enter")
     public CommonResponse<ChatRoomEnterResponseDto> enter(@RequestParam("brandId") Long brandId,
                                                           @AuthenticationPrincipal UserDetails userDetails){
-        // Long userId = customUserPrincipal.getUserId();
-        ChatRoomEnterRequestDto dto = ChatRoomEnterRequestDto.builder()
-                .userId(1L)
-                .brandId(brandId)
-                .build();
+
+        ChatRoomEnterRequestDto dto = ChatRoomMapper.toEnterRequestDto(brandId,userId);
 
         return CommonResponse.success(
                         HttpStatus.OK,
@@ -35,6 +33,8 @@ public class ChatController {
                 chatFacade.enterChatRoom(dto)
         );
     }
+
+
 
 
 
