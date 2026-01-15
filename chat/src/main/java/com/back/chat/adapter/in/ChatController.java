@@ -24,13 +24,10 @@ public class ChatController {
     @PostMapping("/enter")
     public CommonResponse<ChatRoomEnterResponseDto> enter(@RequestParam("brandId") Long brandId,
                                                           @AuthenticationPrincipal UserDetails userDetails){
-
-        ChatRoomEnterRequestDto dto = ChatRoomMapper.toEnterRequestDto(brandId,userId);
-
         return CommonResponse.success(
                         HttpStatus.OK,
                 "로그인 성공",
-                chatFacade.enterChatRoom(dto)
+                chatFacade.enterChatRoom(ChatRoomMapper.toEnterRequestDto(brandId,userId))
         );
     }
 
