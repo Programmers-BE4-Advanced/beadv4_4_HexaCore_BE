@@ -1,5 +1,7 @@
 package com.back.security.jwt;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -40,11 +42,20 @@ public class JWTUtil {
     }
 
     /**
-     * JWT 토큰에서 만료시간 가져오기
+     * JWT 토큰 검증 및 데이터 추출
      */
-    public Boolean isExpired(String token) {
+    public Claims validateAndGetClaims(String token) {
+        Claims claims = Jwts.parser().verifyWith(secretKey).build()
+                .parseSignedClaims(token)
+                .getPayload();
 
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+        // 카테고리 검증
+        String category = claims.get("category", String.class);
+        if (!"access".equals(category)) {
+            throw new JwtException("Access 토큰이 아닙니다.");
+        }
+
+        return claims;
     }
 
     /**

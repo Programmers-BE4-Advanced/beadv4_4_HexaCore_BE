@@ -1,7 +1,9 @@
 package com.back.security.jwt;
 
 import com.back.security.principal.AuthPrincipal;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,49 +30,50 @@ public class JWTFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        // 헤더에서 access키에 담긴 토큰을 꺼냄
-        String accessToken = request.getHeader("Authorization");
+        String accessToken = extractToken(request);
 
         // 토큰이 없다면 다음 필터로 넘김
-        if (accessToken == null || !accessToken.startsWith("Bearer ") ) {
-
+        if (accessToken == null  ) {
             filterChain.doFilter(request, response);
-
             return;
         }
-
-        //Bearer 부분 제거 후 순수 토큰만 획득
-        String token = accessToken.split(" ")[1];
 
         // 토큰 만료 여부 확인, 만료시 다음 필터로 넘기지 않음
         try {
-            jwtUtil.isExpired(token);
-        }catch (ExpiredJwtException e) {
+            Claims claims = jwtUtil.validateAndGetClaims(accessToken);
+            setAuthenticationContext(claims);
+
+        } catch (ExpiredJwtException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        } catch (JwtException | IllegalArgumentException e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
-        // 토큰이 access인지 확인
-        String category = jwtUtil.getCategory(token);
+        filterChain.doFilter(request, response);
+    }
 
-        if (!category.equals("access")) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
+    private String extractToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
         }
 
-        // email, role 값을 획득
-        Long userId = jwtUtil.getUserId(token);
-        String role = jwtUtil.getRole(token);
+        return null;
+    }
 
+    private void setAuthenticationContext(Claims claims) {
+        Long userId = Long.parseLong(claims.getSubject());
+        String role = claims.get("role", String.class);
 
         AuthPrincipal principal = new AuthPrincipal(userId, role);
-
         Authentication authToken = new UsernamePasswordAuthenticationToken(
                 principal, null, principal.getAuthorities()
         );
-        SecurityContextHolder.getContext().setAuthentication(authToken);
 
-        filterChain.doFilter(request, response);
+        SecurityContextHolder.getContext().setAuthentication(authToken);
     }
 
 }
