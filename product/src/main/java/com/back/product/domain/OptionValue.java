@@ -13,7 +13,7 @@ import org.hibernate.annotations.SQLRestriction;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @SQLDelete(sql = "UPDATE OPTION_VALUE SET deleted_at = NOW() WHERE id = ?")
 @SQLRestriction("deleted_at IS NULL")
-@Table(name = "OPTION_VALUE")
+@Table(name = "option_value")
 public class OptionValue extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +23,6 @@ public class OptionValue extends BaseTimeEntity {
     @JoinColumn(name = "option_group_id", nullable = false)
     private OptionGroup optionGroup;
 
-    @Column(nullable = false, length = 20)
+    @Column(name="option_value", nullable = false, length = 20)
     private String value;
 }
