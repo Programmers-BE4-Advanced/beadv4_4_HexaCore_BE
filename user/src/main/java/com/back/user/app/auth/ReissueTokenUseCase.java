@@ -2,7 +2,7 @@ package com.back.user.app.auth;
 
 import com.back.common.code.FailureCode;
 import com.back.common.exception.UnauthorizedException;
-import com.back.common.security.jwt.JWTUtil;
+import com.back.security.jwt.JWTUtil;
 import com.back.user.adapter.out.RefreshStore;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;

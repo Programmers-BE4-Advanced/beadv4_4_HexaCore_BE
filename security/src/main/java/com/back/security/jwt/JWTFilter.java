@@ -1,6 +1,6 @@
-package com.back.common.security.jwt;
+package com.back.security.jwt;
 
-import com.back.common.security.principal.AuthPrincipal;
+import com.back.security.principal.AuthPrincipal;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

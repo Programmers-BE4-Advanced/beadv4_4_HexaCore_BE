@@ -1,6 +1,6 @@
 package com.back.user.adapter.in.auth.security.handler;
 
-import com.back.common.security.jwt.JWTUtil;
+import com.back.security.jwt.JWTUtil;
 import com.back.user.adapter.in.auth.security.oauth.principal.CustomOAuth2User;
 import com.back.user.adapter.out.RefreshStore;
 import jakarta.servlet.ServletException;
