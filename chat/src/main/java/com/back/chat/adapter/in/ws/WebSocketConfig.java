@@ -1,4 +1,4 @@
-package com.back.chat.config;
+package com.back.chat.adapter.in.ws;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
