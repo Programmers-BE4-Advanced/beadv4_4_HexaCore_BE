@@ -43,6 +43,8 @@ public class BaseSecurityConfig {
                 .requestMatchers(
                         "/",
                         "/h2-console/**",
+                        // todo : 개발 편의성을 위해 api/v1/**경로 추가, 추후 제거
+                        "/api/v1/**",
                         // --- Swagger 관련 경로 추가 ---
                         "/v3/api-docs/**",
                         "/swagger-ui/**",
