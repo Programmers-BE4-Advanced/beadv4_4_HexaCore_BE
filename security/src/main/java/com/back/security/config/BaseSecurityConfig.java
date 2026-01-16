@@ -25,10 +25,8 @@ public class BaseSecurityConfig {
     private final JWTFilter jwtFilter;
 
     @Bean
-    @Order(3)
+    @Order(100)
     public SecurityFilterChain apiJwtChain(HttpSecurity http) throws Exception {
-
-        http.securityMatcher("/api/v1/**");
 
         http.csrf(csrf -> csrf.disable());
         http.formLogin(form -> form.disable());
@@ -44,7 +42,13 @@ public class BaseSecurityConfig {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                         "/",
-                        "/h2-console/**"
+                        "/h2-console/**",
+                        // todo : 개발 편의성을 위해 api/v1/**경로 추가, 추후 제거
+                        "/api/v1/**",
+                        // --- Swagger 관련 경로 추가 ---
+                        "/v3/api-docs/**",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html"
                 ).permitAll()
                 .anyRequest().authenticated()
         );
