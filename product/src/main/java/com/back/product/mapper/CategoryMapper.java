@@ -2,6 +2,7 @@ package com.back.product.mapper;
 
 import com.back.product.domain.Category;
 import com.back.product.dto.CategoryDto;
+import com.back.product.dto.request.CategoryCreateRequestDto;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,10 +14,10 @@ public class CategoryMapper {
                 .build();
     }
 
-    public Category toEntity(CategoryDto categoryDto) {
+    public Category toEntity(CategoryCreateRequestDto request) {
         return Category.builder()
-                .name(categoryDto.name())
-                .imageUrl(categoryDto.imageUrl())
+                .name(request.name())
+                .imageUrl(request.imageUrl())
                 .build();
     }
 }

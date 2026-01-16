@@ -30,4 +30,9 @@ public class ProductSupport {
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
+
+    @Transactional(readOnly = true)
+    public boolean existsCategoryByName(String name) {
+        return categoryRepository.existsCategoryByNameIgnoreCase(name);
+    }
 }

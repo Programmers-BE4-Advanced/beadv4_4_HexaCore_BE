@@ -5,6 +5,7 @@ import com.back.product.app.usecase.CategoryUseCase;
 import com.back.product.dto.CategoryDto;
 import com.back.product.dto.request.BrandCreateRequestDto;
 import com.back.product.dto.BrandDto;
+import com.back.product.dto.request.CategoryCreateRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,5 +32,10 @@ public class ProductFacade {
     @Transactional(readOnly = true)
     public List<CategoryDto> getCategories() {
         return categoryUseCase.getCategories();
+    }
+
+    @Transactional
+    public CategoryDto createCategory(@Valid CategoryCreateRequestDto request) {
+        return categoryUseCase.createCategory(request);
     }
 }
