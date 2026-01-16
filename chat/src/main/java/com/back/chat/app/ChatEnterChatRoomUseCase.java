@@ -15,7 +15,7 @@ public class ChatEnterChatRoomUseCase {
 
 
     public ChatRoomEnterResponseDto enterChatRoom(Long brandId) {
-        ChatRoom chatRoom = chatSupport.findRoomByBrandId(brandId).orElseThrow(()-> new BadRequestException(FailureCode.ENTITY_NOT_FOUND));
+        ChatRoom chatRoom = chatSupport.findRoomByBrandId(brandId).orElseThrow(()-> new BadRequestException(FailureCode.CHAT_ROOM_NOT_FOUND));
         return ChatRoomMapper.toEnterResponseDto(chatRoom);
     }
 }
