@@ -4,6 +4,7 @@ import com.back.product.app.usecase.BrandUseCase;
 import com.back.product.dto.response.BrandResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
 public class ProductFacade {
     private final BrandUseCase brandUseCase;
 
+    @Transactional(readOnly = true)
     public List<BrandResponseDto> getBrands() {
         return brandUseCase.getBrands();
     }

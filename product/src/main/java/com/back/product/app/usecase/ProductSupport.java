@@ -4,6 +4,7 @@ import com.back.product.adapter.out.BrandRepository;
 import com.back.product.domain.Brand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
 public class ProductSupport {
     private final BrandRepository brandRepository;
 
+    @Transactional(readOnly = true)
     public List<Brand> getAllBrands() {
         return brandRepository.findAll();
     }
