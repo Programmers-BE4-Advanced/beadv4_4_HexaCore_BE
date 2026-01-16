@@ -1,7 +1,9 @@
 package com.back.product.app;
 
 import com.back.product.app.usecase.BrandUseCase;
+import com.back.product.dto.request.BrandCreateRequestDto;
 import com.back.product.dto.BrandDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,5 +18,10 @@ public class ProductFacade {
     @Transactional(readOnly = true)
     public List<BrandDto> getBrands() {
         return brandUseCase.getBrands();
+    }
+
+    @Transactional
+    public BrandDto createBrand(@Valid BrandCreateRequestDto request) {
+        return brandUseCase.createBrand(request);
     }
 }
