@@ -26,6 +26,7 @@ repositories {
 
 dependencies {
     implementation project(":common")
+    implementation project(":security")
 }
 
 tasks.named('test') {
