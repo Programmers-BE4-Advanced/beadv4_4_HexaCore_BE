@@ -1,5 +1,6 @@
 package com.back.notification.adapter.in;
 
+import com.back.common.Settlement.event.SettlementCompletedEvent;
 import com.back.common.market.event.BiddingFailedEvent;
 import com.back.common.market.event.PurchaseCanceledEvent;
 import com.back.common.market.event.BiddingCompletedEvent;
@@ -41,5 +42,12 @@ public class NotificationEventListener {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void handle(InspectionCompletedEvent event) {
         notificationFacade.notify(Type.INSPECTION_COMPLETED, event);
+    }
+
+    // 정산 완료
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void handle(SettlementCompletedEvent event) {
+        notificationFacade.notify(Type.SETTLEMENT_COMPLETED, event);
     }
 }

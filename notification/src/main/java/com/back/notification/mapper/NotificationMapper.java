@@ -1,5 +1,6 @@
 package com.back.notification.mapper;
 
+import com.back.common.Settlement.event.SettlementCompletedEvent;
 import com.back.common.market.event.BiddingFailedEvent;
 import com.back.common.market.event.PurchaseCanceledEvent;
 import com.back.common.market.event.BiddingCompletedEvent;
@@ -85,6 +86,20 @@ public class NotificationMapper {
                         "productNumber", event.productNumber()
                 ))
                 .deepLink("/biddings/" + event.productId())     // Todo : 실제 딥링크로 수정
+                .isRead(false)
+                .build();
+    }
+
+    public Notification toSettlementCompletedNotification(Type type, SettlementCompletedEvent event, Long sellerId) {
+        return Notification.builder()
+                .userId(sellerId)
+                .type(type)
+                .content(Map.of(
+                        "startAt", event.startAt(),
+                        "endAt", event.endAt(),
+                        "totalNetAmount", event.totalNetAmount()
+                ))
+                .deepLink("/settlements/" + event.sellerId())     // Todo : 실제 딥링크로 수정
                 .isRead(false)
                 .build();
     }
