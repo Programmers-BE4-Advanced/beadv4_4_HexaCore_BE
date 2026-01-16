@@ -22,7 +22,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Bean
     public JwtHandshakeInterceptor jwtHandshakeInterceptor() {
-        return new JwtHandshakeInterceptor();
+        return new JwtHandshakeInterceptor(jwtUtil);
     }
 
     @Override
