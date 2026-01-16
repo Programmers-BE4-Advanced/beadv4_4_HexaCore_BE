@@ -1,5 +1,6 @@
 package com.back.notification.mapper;
 
+import com.back.common.market.event.BiddingFailedEvent;
 import com.back.common.market.event.PurchaseCanceledEvent;
 import com.back.common.market.event.BiddingCompletedEvent;
 import com.back.notification.domain.Notification;
@@ -48,6 +49,24 @@ public class NotificationMapper {
                         "role", role
                 ))
                 .deepLink("/biddings/" + event.biddingId())     // Todo : 실제 딥링크로 수정
+                .isRead(false)
+                .build();
+    }
+
+    public Notification toBidFailedNotification(Type type, BiddingFailedEvent event,
+                                                Long userId, NotificationTargetRole role) {
+        return Notification.builder()
+                .userId(userId)
+                .type(type)
+                .content(Map.of(
+                        "productId", event.productId(),
+                        "productName", event.productName(),
+                        "productSize", event.productSize(),
+                        "price", event.price(),
+                        "biddingPosition", event.biddingPosition(),
+                        "role", role
+                ))
+                .deepLink("/products/" + event.productId())     // Todo : 실제 딥링크로 수정
                 .isRead(false)
                 .build();
     }
