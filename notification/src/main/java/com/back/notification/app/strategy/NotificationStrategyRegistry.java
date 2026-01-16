@@ -1,6 +1,5 @@
-package com.back.notification.app;
+package com.back.notification.app.strategy;
 
-import com.back.notification.domain.NotificationStrategy;
 import com.back.notification.domain.enums.Type;
 import org.springframework.stereotype.Component;
 

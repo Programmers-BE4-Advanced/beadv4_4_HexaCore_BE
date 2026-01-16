@@ -1,6 +1,7 @@
-package com.back.notification.domain;
+package com.back.notification.app.strategy;
 
 import com.back.common.market.event.BiddingCompletedEvent;
+import com.back.notification.domain.Notification;
 import com.back.notification.domain.enums.NotificationTargetRole;
 import com.back.notification.domain.enums.Type;
 import com.back.notification.mapper.NotificationMapper;
@@ -12,7 +13,7 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
-public class BiddingCompletedStrategy implements NotificationStrategy<BiddingCompletedEvent>{
+public class BiddingCompletedStrategy implements NotificationStrategy<BiddingCompletedEvent> {
     private final NotificationMapper mapper;
 
     @Override

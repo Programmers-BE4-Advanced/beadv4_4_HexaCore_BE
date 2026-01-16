@@ -1,6 +1,7 @@
-package com.back.notification.domain;
+package com.back.notification.app.strategy;
 
 import com.back.common.market.event.PriceDroppedEvent;
+import com.back.notification.domain.Notification;
 import com.back.notification.domain.enums.Type;
 import com.back.notification.mapper.NotificationMapper;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class PriceDroppedStrategy implements NotificationStrategy<PriceDroppedEvent>{
+public class PriceDroppedStrategy implements NotificationStrategy<PriceDroppedEvent> {
     private final NotificationMapper mapper;
 
     public Type type(){

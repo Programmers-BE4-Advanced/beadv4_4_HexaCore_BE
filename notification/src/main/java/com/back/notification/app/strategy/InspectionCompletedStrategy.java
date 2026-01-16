@@ -1,6 +1,7 @@
-package com.back.notification.domain;
+package com.back.notification.app.strategy;
 
 import com.back.common.product.event.InspectionCompletedEvent;
+import com.back.notification.domain.Notification;
 import com.back.notification.domain.enums.Type;
 import com.back.notification.mapper.NotificationMapper;
 import lombok.RequiredArgsConstructor;
