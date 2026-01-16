@@ -22,7 +22,7 @@ public class ProductSupport {
     }
 
     @Transactional(readOnly = true)
-    public boolean existsByName(String name) {
+    public boolean existsBrandByName(String name) {
         return brandRepository.existsBrandByNameIgnoreCase(name);
     }
 

@@ -34,7 +34,7 @@ public class BrandUseCase {
     }
 
     private void validateDuplicateBrandName(String name) {
-        if (productSupport.existsByName(name)) {
+        if (productSupport.existsBrandByName(name)) {
             throw new CustomException(FailureCode.BRAND_NAME_DUPLICATE);
         }
     }
