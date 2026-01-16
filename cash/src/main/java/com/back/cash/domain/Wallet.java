@@ -6,7 +6,6 @@ import lombok.*;
 
 import java.math.BigDecimal;
 
-
 @Entity
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
