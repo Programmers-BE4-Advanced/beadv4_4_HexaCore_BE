@@ -9,10 +9,11 @@ import com.back.product.dto.response.BrandResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/api/v1/products/brands", produces = "application/json")
+@RequestMapping(path = "/api/v1/products/brands", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class ApiV1BrandController implements BrandApiController {
     private final ProductFacade ProductFacade;
