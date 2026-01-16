@@ -1,5 +1,6 @@
 package com.back.notification.adapter.in;
 
+import com.back.common.market.event.BiddingCanceledEvent;
 import com.back.common.market.event.BiddingCompletedEvent;
 import com.back.notification.app.NotificationFacade;
 import com.back.notification.domain.enums.Type;
@@ -19,5 +20,11 @@ public class NotificationEventListener {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void handle(BiddingCompletedEvent event) {
         notificationFacade.notify(Type.BID_COMPLETED, event);
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void handle(BiddingCanceledEvent event) {
+        notificationFacade.notify(Type.PURCHASE_CANCELED, event);
     }
 }
