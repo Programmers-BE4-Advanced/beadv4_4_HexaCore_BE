@@ -3,6 +3,7 @@ package com.back.chat.app;
 import com.back.chat.adapter.out.ChatMessageRepository;
 import com.back.chat.adapter.out.ChatReportRepository;
 import com.back.chat.adapter.out.ChatRoomRepository;
+import com.back.chat.domain.ChatMessage;
 import com.back.chat.domain.ChatRoom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,14 @@ public class ChatSupport {
 
     public Optional<ChatRoom> findRoomByBrandId(Long brandId){
         return chatRoomRepository.findByBrandId(brandId);
+    }
+
+    public Optional<ChatRoom> findRoomById(Long roomId) {
+        return chatRoomRepository.findById(roomId);
+    }
+
+    public ChatMessage saveMessage(ChatMessage chatMessage) {
+        return chatMessageRepository.save(chatMessage);
     }
 
 
