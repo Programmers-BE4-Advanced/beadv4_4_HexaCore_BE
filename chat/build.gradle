@@ -3,5 +3,6 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
     implementation project(":common")
     implementation project(":security")
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
