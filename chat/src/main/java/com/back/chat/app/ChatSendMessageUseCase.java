@@ -2,7 +2,7 @@ package com.back.chat.app;
 
 import com.back.chat.domain.ChatMessage;
 import com.back.chat.dto.request.ChatMessageSendRequestDto;
-import com.back.chat.dto.response.ChatMessageSendResponseDto;
+import com.back.chat.event.payload.ChatMessagePayload;
 import com.back.chat.event.ChatMessageSavedEvent;
 import com.back.common.code.FailureCode;
 import com.back.common.exception.BadRequestException;
@@ -33,7 +33,7 @@ public class ChatSendMessageUseCase {
                 ChatMessage.create(roomId,userId,requestDto.content())
         );
 
-        ChatMessageSendResponseDto payload = new ChatMessageSendResponseDto(
+        ChatMessagePayload payload = new ChatMessagePayload(
                 savedMessage.getId(),
                 roomId,
                 userId,

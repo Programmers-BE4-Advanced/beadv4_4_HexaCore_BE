@@ -1,8 +1,8 @@
-package com.back.chat.dto.response;
+package com.back.chat.event.payload;
 
 import java.time.LocalDateTime;
 
-public record ChatMessageSendResponseDto (
+public record ChatMessagePayload(
         Long messageId,
         Long userId,
         Long roomId,

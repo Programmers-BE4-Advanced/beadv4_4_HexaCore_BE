@@ -2,8 +2,6 @@ package com.back.chat.adapter.in;
 
 import com.back.chat.app.ChatFacade;
 import com.back.chat.dto.request.ChatMessageSendRequestDto;
-import com.back.chat.dto.response.ChatMessageSendResponseDto;
-import com.back.common.response.CommonResponse;
 import com.back.security.principal.AuthPrincipal;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

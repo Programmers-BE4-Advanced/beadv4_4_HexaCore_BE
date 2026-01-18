@@ -1,6 +1,6 @@
 package com.back.chat.adapter.out;
 
-import com.back.chat.dto.response.ChatMessageSendResponseDto;
+import com.back.chat.event.payload.ChatMessagePayload;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ public class RedisChatMessagePublisher {
     private final StringRedisTemplate stringRedisTemplate;
     private final ObjectMapper objectMapper;
 
-    public void publish(Long roomId, ChatMessageSendResponseDto payload) {
+    public void publish(Long roomId, ChatMessagePayload payload) {
         String channel = CHANNEL_PREFIX + roomId;
 
         try {

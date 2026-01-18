@@ -1,7 +1,7 @@
 package com.back.chat;
 
 import com.back.chat.adapter.out.RedisChatMessagePublisher;
-import com.back.chat.dto.response.ChatMessageSendResponseDto;
+import com.back.chat.event.payload.ChatMessagePayload;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,7 +32,7 @@ class RedisPublishIntegrationTest {
         Long roomId = 1L;
         String channel = "chatroom:" + roomId;
 
-        ChatMessageSendResponseDto payload = new ChatMessageSendResponseDto(
+        ChatMessagePayload payload = new ChatMessagePayload(
                 100L,
                 roomId,
                 1L,
