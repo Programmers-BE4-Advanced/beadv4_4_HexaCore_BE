@@ -21,9 +21,7 @@ public class ChatSupport {
         return chatRoomRepository.findByBrandId(brandId);
     }
 
-    public Optional<ChatRoom> findRoomById(Long roomId) {
-        return chatRoomRepository.findById(roomId);
-    }
+    public boolean existsRoomById(Long roomId) { return chatRoomRepository.existsById(roomId); }
 
     public ChatMessage saveMessage(ChatMessage chatMessage) {
         return chatMessageRepository.save(chatMessage);

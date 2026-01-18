@@ -1,8 +1,6 @@
 package com.back.chat.app;
 
-import com.back.chat.adapter.out.RedisChatMessagePublisher;
 import com.back.chat.domain.ChatMessage;
-import com.back.chat.domain.ChatRoom;
 import com.back.chat.dto.request.ChatMessageSendRequestDto;
 import com.back.chat.dto.response.ChatMessageSendResponseDto;
 import com.back.chat.event.ChatMessageSavedEvent;
@@ -23,25 +21,28 @@ public class ChatSendMessageUseCase {
     @Transactional
     public void sendMessage(ChatMessageSendRequestDto requestDto, Long userId) {
 
-        ChatRoom chatRoom = chatSupport.findRoomById(requestDto.roomId())
-                .orElseThrow(() -> new BadRequestException(FailureCode.CHAT_ROOM_NOT_FOUND));
+        Long roomId = requestDto.roomId();
+
+        if(!chatSupport.existsRoomById(roomId)){
+            throw new BadRequestException(FailureCode.CHAT_ROOM_NOT_FOUND);
+        }
 
         // TODO 사용자 메시지 전송 제한 여부 검증 (외부 모듈/ApiClient)
 
         ChatMessage savedMessage = chatSupport.saveMessage(
-                ChatMessage.create(chatRoom,userId,requestDto.content())
+                ChatMessage.create(roomId,userId,requestDto.content())
         );
 
         ChatMessageSendResponseDto payload = new ChatMessageSendResponseDto(
                 savedMessage.getId(),
-                chatRoom.getId(),
+                roomId,
                 userId,
                 savedMessage.getContent(),
                 savedMessage.isBlinded(),
                 savedMessage.getCreatedAt()
         );
 
-        eventPublisher.publishEvent(new ChatMessageSavedEvent(chatRoom.getId(), payload));
+        eventPublisher.publishEvent(new ChatMessageSavedEvent(roomId, payload));
     }
 
 }
