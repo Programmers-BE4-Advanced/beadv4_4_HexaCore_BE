@@ -16,9 +16,8 @@ public class ChatMessage extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chat_room_id", nullable = false)
-    private ChatRoom chatRoom;
+    @Column(name = "room_id", nullable = false, unique = true)
+    private Long roomId;
 
     @Column(name = "user_id", nullable = false)
     private Long userId;
@@ -30,22 +29,22 @@ public class ChatMessage extends BaseTimeEntity {
     private boolean isBlinded = false;
 
     private ChatMessage(
-            ChatRoom chatRoom,
+            Long roomId,
             Long userId,
             String content
     ) {
-        this.chatRoom = chatRoom;
+        this.roomId = roomId;
         this.userId = userId;
         this.content = content;
         this.isBlinded = false;
     }
 
     public static ChatMessage create(
-            ChatRoom chatRoom,
+            Long roomId,
             Long userId,
             String content
     ) {
-        return new ChatMessage(chatRoom, userId, content);
+        return new ChatMessage(roomId, userId, content);
     }
 
 }
