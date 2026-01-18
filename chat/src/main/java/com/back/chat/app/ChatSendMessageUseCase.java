@@ -1,5 +1,6 @@
 package com.back.chat.app;
 
+import com.back.chat.adapter.out.RedisChatMessagePublisher;
 import com.back.chat.domain.ChatMessage;
 import com.back.chat.domain.ChatRoom;
 import com.back.chat.dto.request.ChatMessageSendRequestDto;
@@ -15,9 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ChatSendMessageUseCase {
 
     private final ChatSupport chatSupport;
-
-    // Redis pub/sub 발행.
-    // private final ChatMessagePublisher chatMessagePublisher;
+    private final RedisChatMessagePublisher redisChatMessagePublisher;
 
     @Transactional
     public void sendMessage(ChatMessageSendRequestDto requestDto, Long userId) {
@@ -42,7 +41,7 @@ public class ChatSendMessageUseCase {
         );
 
         // 모든 인스턴스에 메시지 전파
-        // chatMessagePublisher.publish(room.getId(), payload);
+        redisChatMessagePublisher.publish(chatRoom.getId(), payload);
     }
 
 }
