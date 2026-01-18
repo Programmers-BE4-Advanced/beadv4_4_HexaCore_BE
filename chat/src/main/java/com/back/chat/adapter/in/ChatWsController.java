@@ -5,6 +5,7 @@ import com.back.chat.dto.request.ChatMessageSendRequestDto;
 import com.back.chat.dto.response.ChatMessageSendResponseDto;
 import com.back.common.response.CommonResponse;
 import com.back.security.principal.AuthPrincipal;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -23,7 +24,7 @@ public class ChatWsController {
 
     @MessageMapping("/message")
     public void sendMessage(
-            @Payload ChatMessageSendRequestDto requestDto,
+            @Valid @Payload ChatMessageSendRequestDto requestDto,
             SimpMessageHeaderAccessor headerAccessor
     ) {
         Object principalObj = headerAccessor.getSessionAttributes().get(ATTR_PRINCIPAL);
