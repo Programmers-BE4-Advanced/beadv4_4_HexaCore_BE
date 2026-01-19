@@ -1,6 +1,6 @@
 package com.back.chat.adapter.in;
 
-import com.back.chat.adapter.out.RedisChatMessagePublisher;
+import com.back.chat.adapter.out.redis.RedisChatMessagePublisher;
 import com.back.chat.event.ChatMessageSavedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

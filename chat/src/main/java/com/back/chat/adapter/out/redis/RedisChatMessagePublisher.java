@@ -1,4 +1,4 @@
-package com.back.chat.adapter.out;
+package com.back.chat.adapter.out.redis;
 
 import com.back.chat.event.payload.ChatMessagePayload;
 import com.fasterxml.jackson.core.JsonProcessingException;
