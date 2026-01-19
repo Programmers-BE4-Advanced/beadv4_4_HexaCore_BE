@@ -34,4 +34,8 @@ public class PriceAlert extends BaseTimeEntity {
     private BigDecimal targetPrice;
 
     private LocalDateTime triggeredAt;
+
+    public void trigger(LocalDateTime now) {
+        this.triggeredAt = now;
+    }
 }
