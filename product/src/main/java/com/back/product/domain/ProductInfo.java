@@ -17,7 +17,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @SQLDelete(sql = "UPDATE PRODUCT_INFO SET deleted_at = NOW() WHERE id = ?")
 @SQLRestriction("deleted_at IS NULL")
-@Table(name = "product_info")
+@Table(name = "product_info",
+    uniqueConstraints = {
+        @UniqueConstraint(name = "uk_product_info_brand_code", columnNames = {"brand_id", "code"})
+    }
+)
 public class ProductInfo extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
