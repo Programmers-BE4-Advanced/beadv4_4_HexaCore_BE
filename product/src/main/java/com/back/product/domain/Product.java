@@ -26,5 +26,6 @@ public class Product extends BaseTimeEntity {
 
     @Column(nullable = false)
     @Min(0)
-    private Long inventory;
+    @Builder.Default
+    private Long inventory = 0L;
 }
