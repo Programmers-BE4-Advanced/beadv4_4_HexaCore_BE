@@ -1,5 +1,6 @@
-package com.back.notification.domain;
+package com.back.notification.app.strategy;
 
+import com.back.notification.domain.Notification;
 import com.back.notification.domain.enums.Type;
 
 import java.util.List;

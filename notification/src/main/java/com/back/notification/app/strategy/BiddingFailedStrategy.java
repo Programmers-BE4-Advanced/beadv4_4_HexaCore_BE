@@ -1,6 +1,7 @@
-package com.back.notification.domain;
+package com.back.notification.app.strategy;
 
 import com.back.common.market.event.BiddingFailedEvent;
+import com.back.notification.domain.Notification;
 import com.back.notification.domain.enums.NotificationTargetRole;
 import com.back.notification.domain.enums.Type;
 import com.back.notification.mapper.NotificationMapper;

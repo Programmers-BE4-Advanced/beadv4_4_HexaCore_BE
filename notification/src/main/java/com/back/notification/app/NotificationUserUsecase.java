@@ -1,6 +1,7 @@
-package com.back.notification.domain;
+package com.back.notification.app;
 
 import com.back.notification.adapter.out.NotificationUserRepository;
+import com.back.notification.domain.NotificationUser;
 import com.back.notification.exception.NotificationUserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

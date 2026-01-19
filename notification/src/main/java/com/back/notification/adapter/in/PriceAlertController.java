@@ -1,0 +1,28 @@
+package com.back.notification.adapter.in;
+
+import com.back.common.code.SuccessCode;
+import com.back.common.response.CommonResponse;
+import com.back.notification.app.PriceAlertFacade;
+import com.back.notification.dto.request.PriceAlertSaveRequestDto;
+import com.back.notification.dto.response.PriceAlertIdDto;
+import com.back.security.principal.AuthPrincipal;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/v1/price-alerts")
+@RequiredArgsConstructor
+public class PriceAlertController {
+    private final PriceAlertFacade priceAlertFacade;
+
+    @PostMapping
+    public CommonResponse<PriceAlertIdDto> savePriceAlert(@RequestBody PriceAlertSaveRequestDto dto,
+                                                          @AuthenticationPrincipal AuthPrincipal principal) {
+        PriceAlertIdDto response = priceAlertFacade.save(dto, principal.getUserId());
+        return CommonResponse.success(SuccessCode.CREATED, response);
+    }
+}

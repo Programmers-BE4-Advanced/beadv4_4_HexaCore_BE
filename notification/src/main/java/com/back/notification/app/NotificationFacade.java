@@ -1,7 +1,8 @@
 package com.back.notification.app;
 
+import com.back.notification.app.strategy.NotificationStrategyRegistry;
 import com.back.notification.domain.Notification;
-import com.back.notification.domain.NotificationStrategy;
+import com.back.notification.app.strategy.NotificationStrategy;
 import com.back.notification.domain.enums.Type;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
