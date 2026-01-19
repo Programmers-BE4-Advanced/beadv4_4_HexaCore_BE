@@ -26,8 +26,8 @@ public class NotificationProduct extends BaseTimeEntity {
     private String productOption;
 
     // Product_info 테이블
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(name = "product_name", nullable = false)
+    private String productName;
 
     @Column(name = "product_number", nullable = false)
     private String productNumber;

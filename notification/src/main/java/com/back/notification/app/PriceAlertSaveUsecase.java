@@ -22,8 +22,8 @@ public class PriceAlertSaveUsecase {
 
     private final PriceAlertMapper priceAlertMapper;
 
-
-    public void save(PriceAlertSaveRequestDto dto, Long userId) {
+    // Todo: 리팩토링 필요
+    public Long save(PriceAlertSaveRequestDto dto, Long userId) {
         NotificationUser user = notificationUserRepository.findById(userId)
                 .orElseThrow(NotificationUserNotFoundException::new);
 
@@ -32,6 +32,8 @@ public class PriceAlertSaveUsecase {
 
         PriceAlert priceAlert = priceAlertMapper.toPriceAlert(dto, user, product);
 
-        priceAlertRepository.save(priceAlert);
+        PriceAlert saved = priceAlertRepository.save(priceAlert);
+
+        return saved.getId();
     }
 }
