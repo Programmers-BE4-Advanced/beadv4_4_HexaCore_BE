@@ -6,5 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface ChatMessageRepository extends JpaRepository<ChatMessage,Long> {
-    Optional<ChatMessage> findTopByChatRoomIdOrderByIdDesc(Long chatRoomId);
+    boolean existsByRoomIdAndUserIdAndContent(
+            Long roomId,
+            Long userId,
+            String content
+    );
 }
