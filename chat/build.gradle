@@ -13,3 +13,7 @@ dependencies {
     testImplementation 'org.testcontainers:redis'
 }
 
+test {
+    useJUnitPlatform()
+}
+
