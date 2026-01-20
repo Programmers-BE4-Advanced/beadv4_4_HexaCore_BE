@@ -4,7 +4,8 @@ import static com.back.settlement.domain.SettlementPolicy.CHUNK_SIZE;
 
 import com.back.settlement.adapter.out.feign.market.OrderClient;
 import com.back.settlement.app.event.SettlementItemRequest;
-import com.back.settlement.app.facade.SettlementFacade;
+import com.back.settlement.app.support.YearMonthUtils;
+import com.back.settlement.app.usecase.SettlementItemAddUseCase;
 import java.time.YearMonth;
 import java.util.Iterator;
 import java.util.List;
@@ -27,7 +28,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 @RequiredArgsConstructor
 public class SettlementFetchOrdersStepConfig {
     private final OrderClient orderClient;
-    private final SettlementFacade settlementFacade;
+    private final SettlementItemAddUseCase settlementItemAddUseCase;
 
     @Bean
     public Step fetchOrdersAndCreateItemsStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
@@ -56,7 +57,7 @@ public class SettlementFetchOrdersStepConfig {
                     return currentPageIterator.next();
                 }
 
-                YearMonth targetMonth = parseTargetMonth(targetMonthStr);
+                YearMonth targetMonth = YearMonthUtils.parseOrDefault(targetMonthStr);
                 List<SettlementItemRequest> pageData = orderClient.findSettlementTargetOrders(targetMonth, page++, CHUNK_SIZE);
 
                 if (pageData.isEmpty()) {
@@ -83,16 +84,9 @@ public class SettlementFetchOrdersStepConfig {
     public ItemWriter<SettlementItemRequest> orderItemWriter() {
         return chunk -> {
             for (SettlementItemRequest request : chunk) {
-                settlementFacade.addSettlementItem(request);
+                settlementItemAddUseCase.add(request);
             }
             log.info("SettlementItem 생성 완료. 처리 건수: {}", chunk.size());
         };
-    }
-
-    private YearMonth parseTargetMonth(String targetMonthStr) {
-        if (targetMonthStr == null) {
-            return YearMonth.now().minusMonths(1);
-        }
-        return YearMonth.parse(targetMonthStr);
     }
 }
