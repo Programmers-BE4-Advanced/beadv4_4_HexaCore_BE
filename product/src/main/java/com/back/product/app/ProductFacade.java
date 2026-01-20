@@ -4,10 +4,8 @@ import com.back.product.app.usecase.*;
 import com.back.product.domain.*;
 import com.back.product.dto.CategoryDto;
 import com.back.product.dto.ProductDto;
-import com.back.product.dto.request.BrandCreateRequestDto;
+import com.back.product.dto.request.*;
 import com.back.product.dto.BrandDto;
-import com.back.product.dto.request.CategoryCreateRequestDto;
-import com.back.product.dto.request.ProductCreateRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -57,6 +55,6 @@ public class ProductFacade {
 
         ProductInfo productInfo = productInfoUseCase.createProductInfo(brand, category, request.productInfo());
 
-        return productUseCase.createProducts(productInfo, request.variants(), optionValueMap);
+        return productUseCase.createMultipleProduct(productInfo, request.variants(), optionValueMap);
     }
 }
