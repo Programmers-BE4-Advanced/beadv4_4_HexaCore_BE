@@ -84,7 +84,7 @@ public class NotificationMessageFactory {
             case SETTLEMENT_COMPLETED -> new TemplateSpec(
                     "notification.settlement.completed",
                     new Object[]{
-                            /* month */ 10,
+                            10, // 정산 월 (임시 하드코딩, 추후 이벤트 값으로 교체 예정)
                             c.get("endAt"),
                             c.get("totalNetAmount")
                     }
