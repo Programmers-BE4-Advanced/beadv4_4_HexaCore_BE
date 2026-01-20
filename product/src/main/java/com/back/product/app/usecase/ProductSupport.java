@@ -1,12 +1,7 @@
 package com.back.product.app.usecase;
 
-import com.back.product.adapter.out.BrandRepository;
-import com.back.product.adapter.out.CategoryRepository;
-import com.back.product.adapter.out.OptionValueRepository;
-import com.back.product.adapter.out.ProductInfoRepository;
-import com.back.product.domain.Brand;
-import com.back.product.domain.Category;
-import com.back.product.domain.OptionValue;
+import com.back.product.adapter.out.*;
+import com.back.product.domain.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +16,9 @@ public class ProductSupport {
     private final CategoryRepository categoryRepository;
     private final ProductInfoRepository productInfoRepository;
     private final OptionValueRepository optionValueRepository;
+    private final ProductRepository productRepository;
+    private final ProductOptionValuesRepository productOptionValuesRepository;
+    private final ProductImageRepository productImageRepository;
 
     @Transactional(readOnly = true)
     public List<Brand> getAllBrands() {
@@ -60,5 +58,25 @@ public class ProductSupport {
     @Transactional(readOnly = true)
     public List<OptionValue> getAllOptionValues(List<Long> optionValueIds) {
         return optionValueRepository.findAllById(optionValueIds);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<ProductInfo> findProductInfoById(Long productInfoId) {
+        return productInfoRepository.findById(productInfoId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Product> getAllProductsByProductInfo(ProductInfo productInfo) {
+        return productRepository.findAllByProductInfo(productInfo);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductOptionValues> getAllProductOptionValuesByProductsIn(List<Product> products) {
+        return productOptionValuesRepository.findAllByProductIn(products);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductImage> getAllProductImagesByProductsIn(List<Product> products) {
+        return productImageRepository.findALlByProductIn(products);
     }
 }

@@ -7,6 +7,7 @@ import com.back.product.domain.Brand;
 import com.back.product.domain.Category;
 import com.back.product.domain.ProductInfo;
 import com.back.product.dto.request.ProductInfoCreateRequestDto;
+import com.back.product.dto.request.ProductInfoUpdateRequestDto;
 import com.back.product.mapper.ProductInfoMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,5 +34,22 @@ public class ProductInfoUseCase {
         if (productSupport.existsProductInfoByBrandAndCode(brand, code)) {
             throw new CustomException(FailureCode.DUPLICATE_PRODUCT_INFO);
         }
+    }
+
+    @Transactional
+    public ProductInfo updateProductInfo(Long productInfoId, Brand brand, Category category, @Valid ProductInfoUpdateRequestDto request) {
+        ProductInfo productInfo = productSupport.findProductInfoById(productInfoId)
+                .orElseThrow(() -> new CustomException(FailureCode.PRODUCT_NOT_FOUND));
+
+        productInfo.update(
+            brand,
+            category,
+            request.name(),
+            request.code(),
+            request.releasePrice(),
+            request.releasedDate()
+        );
+
+        return productInfo;
     }
 }

@@ -28,4 +28,9 @@ public class Product extends BaseTimeEntity {
     @Min(0)
     @Builder.Default
     private Long inventory = 0L;
+
+    public void update(ProductInfo productInfo, Long inventory) {
+        this.productInfo = productInfo;
+        this.inventory = inventory;
+    }
 }

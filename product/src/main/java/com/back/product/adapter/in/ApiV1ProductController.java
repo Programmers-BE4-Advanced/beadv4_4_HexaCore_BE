@@ -4,6 +4,7 @@ import com.back.common.code.SuccessCode;
 import com.back.common.response.CommonResponse;
 import com.back.product.app.ProductFacade;
 import com.back.product.dto.request.ProductCreateRequestDto;
+import com.back.product.dto.request.ProductUpdateRequestDto;
 import com.back.product.dto.response.ProductResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,5 +26,17 @@ public class ApiV1ProductController implements ProductApiController {
                 .products(productFacade.createProduct(request))
                 .build();
         return CommonResponse.success(SuccessCode.CREATED, response);
+    }
+
+    @Override
+    @PutMapping("/{productInfoId}")
+    public CommonResponse<ProductResponseDto> updateProduct(
+            @PathVariable Long productInfoId,
+            @Valid @RequestBody ProductUpdateRequestDto request
+    ) {
+        ProductResponseDto response = ProductResponseDto.builder()
+                .products(productFacade.updateProduct(productInfoId, request))
+                .build();
+        return CommonResponse.success(SuccessCode.OK, response);
     }
 }

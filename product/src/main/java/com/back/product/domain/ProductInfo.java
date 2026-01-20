@@ -2,7 +2,7 @@ package com.back.product.domain;
 
 import com.back.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
@@ -47,4 +47,13 @@ public class ProductInfo extends BaseTimeEntity {
 
     @Column(nullable = false)
     private LocalDateTime releasedDate;
+
+    public void update(Brand brand, Category category, String name, String code, BigDecimal releasePrice, LocalDateTime releasedDate) {
+        this.brand = brand;
+        this.category = category;
+        this.name = name;
+        this.productCode = code;
+        this.releasePrice = releasePrice;
+        this.releasedDate = releasedDate;
+    }
 }

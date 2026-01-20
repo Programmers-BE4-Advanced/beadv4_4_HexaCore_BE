@@ -1,11 +1,14 @@
 package com.back.product.app.usecase;
 
+import com.back.common.code.FailureCode;
+import com.back.common.exception.CustomException;
 import com.back.product.adapter.out.ProductImageRepository;
 import com.back.product.adapter.out.ProductOptionValuesRepository;
 import com.back.product.adapter.out.ProductRepository;
 import com.back.product.domain.*;
 import com.back.product.dto.ProductDto;
 import com.back.product.dto.request.ProductVariantCreateRequestDto;
+import com.back.product.dto.request.ProductVariantUpdateRequestDto;
 import com.back.product.mapper.ProductImageMapper;
 import com.back.product.mapper.ProductMapper;
 import com.back.product.mapper.ProductOptionValuesMapper;
@@ -25,6 +28,7 @@ public class ProductUseCase {
     private final ProductRepository productRepository;
     private final ProductOptionValuesRepository productOptionValuesRepository;
     private final ProductImageRepository productImageRepository;
+    private final ProductSupport productSupport;
 
     @Transactional
     public List<ProductDto> createMultipleProduct(
@@ -52,6 +56,109 @@ public class ProductUseCase {
         List<ProductImage> newProductImages = productImageRepository.saveAll(createdImages);
 
         return convertToDto(newProducts, newProductOptionValues, newProductImages);
+    }
+
+    @Transactional
+    public List<ProductDto> updateMultipleProduct(ProductInfo productInfo, List<ProductVariantUpdateRequestDto> variants, Map<Long, OptionValue> optionValueMap) {
+        List<Product> existProducts = productSupport.getAllProductsByProductInfo(productInfo);
+
+        Map<Boolean, List<ProductVariantUpdateRequestDto>> categorizedVariants = variants.stream()
+                .collect(Collectors.partitioningBy(variant -> variant.productId() != null));
+        List<ProductVariantUpdateRequestDto> variantsToUpdate = categorizedVariants.get(true);
+        List<ProductVariantUpdateRequestDto> variantsToCreate = categorizedVariants.get(false);
+
+        handleDeletes(existProducts, variants);
+        handleUpdates(productInfo, variantsToUpdate, optionValueMap, existProducts);
+        handleCreations(productInfo, variantsToCreate, optionValueMap);
+
+        List<Product> updatedProducts = productSupport.getAllProductsByProductInfo(productInfo);
+        List<ProductOptionValues> updatedProductOptionValues = productSupport.getAllProductOptionValuesByProductsIn(updatedProducts);
+        List<ProductImage> updatedProductImages = productSupport.getAllProductImagesByProductsIn(updatedProducts);
+
+        return convertToDto(updatedProducts, updatedProductOptionValues, updatedProductImages);
+    }
+
+    private void handleCreations(ProductInfo productInfo, List<ProductVariantUpdateRequestDto> variantsToCreate, Map<Long, OptionValue> optionValueMap) {
+        List<Product> createdProducts = new ArrayList<>();
+        List<ProductOptionValues> createdProductOptionValues = new ArrayList<>();
+        List<ProductImage> createdImages = new ArrayList<>();
+
+        variantsToCreate.forEach(variant -> {
+            if (variant.productId() != null) {
+                throw new CustomException(FailureCode.INVALID_INPUT_VALUE);
+            }
+
+            Product newProduct = createProduct(productInfo, variant.inventory());
+            createdProducts.add(newProduct);
+
+            List<ProductOptionValues> newProductOptionValues = createProductOptionValues(newProduct, variant.optionValueIds(), optionValueMap);
+            createdProductOptionValues.addAll(newProductOptionValues);
+
+            List<ProductImage> newProductImages = createProductImages(newProduct, variant.imageUrls());
+            createdImages.addAll(newProductImages);
+        });
+
+        productRepository.saveAll(createdProducts);
+        productOptionValuesRepository.saveAll(createdProductOptionValues);
+        productImageRepository.saveAll(createdImages);
+    }
+
+    private void handleUpdates(ProductInfo productInfo, List<ProductVariantUpdateRequestDto> variantsToUpdate, Map<Long, OptionValue> optionValueMap, List<Product> existProducts) {
+        Map<Long, Product> existProductsMap = existProducts.stream()
+                .collect(Collectors.toMap(Product::getId, p -> p));
+
+        List<Product> updatedProducts = new ArrayList<>();
+        List<ProductOptionValues> updatedProductOptionValues = new ArrayList<>();
+        List<ProductImage> updatedProductImages = new ArrayList<>();
+
+        variantsToUpdate.forEach(variant -> {
+            if (variant.productId() == null) {
+                throw new CustomException(FailureCode.INVALID_INPUT_VALUE);
+            }
+
+            Product updatedProduct = existProductsMap.get(variant.productId());
+            updatedProduct.update(productInfo, variant.inventory());
+            updatedProducts.add(updatedProduct);
+
+            List<ProductOptionValues> newProductOptionValues = createProductOptionValues(updatedProduct, variant.optionValueIds(), optionValueMap);
+            updatedProductOptionValues.addAll(newProductOptionValues);
+
+            List<ProductImage> newProductImages = createProductImages(updatedProduct, variant.imageUrls());
+            updatedProductImages.addAll(newProductImages);
+        });
+
+        deletedProductVariants(updatedProducts);
+        productOptionValuesRepository.saveAll(updatedProductOptionValues);
+        productImageRepository.saveAll(updatedProductImages);
+    }
+
+    private void handleDeletes(List<Product> existProducts, List<ProductVariantUpdateRequestDto> variants) {
+        Set<Long> requestIds = variants.stream()
+                .map(ProductVariantUpdateRequestDto::productId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        List<Product> deletedProducts = existProducts.stream()
+                .filter(p -> !requestIds.contains(p.getId()))
+                .toList();
+
+        if (!deletedProducts.isEmpty()) {
+            deleteProducts(deletedProducts);
+        }
+    }
+
+    private void deleteProducts(List<Product> deletedProducts) {
+        if (!deletedProducts.isEmpty()) {
+            deletedProductVariants(deletedProducts);
+            productRepository.deleteAll(deletedProducts);
+        }
+    }
+
+    private void deletedProductVariants(List<Product> deletedProducts) {
+        if (!deletedProducts.isEmpty()) {
+            productOptionValuesRepository.deleteAllByProductIn(deletedProducts);
+            productImageRepository.deleteAllByProductIn(deletedProducts);
+        }
     }
     
     private Product createProduct(ProductInfo productInfo, Long inventory) {

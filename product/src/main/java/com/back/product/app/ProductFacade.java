@@ -57,4 +57,19 @@ public class ProductFacade {
 
         return productUseCase.createMultipleProduct(productInfo, request.variants(), optionValueMap);
     }
+
+    @Transactional
+    public List<ProductDto> updateProduct(Long productInfoId, @Valid ProductUpdateRequestDto request) {
+        Brand brand = brandUseCase.findBrandExists(request.productInfo().brandId());
+
+        Category category = categoryUseCase.findCategoryExists(request.productInfo().categoryId());
+
+        List<Long> optionValueIds = request.variants().stream()
+                .flatMap(variant -> variant.optionValueIds().stream()).distinct().toList();
+        Map<Long, OptionValue> optionValueMap = optionUseCase.findOptionValuesAsMap(optionValueIds);
+
+        ProductInfo productInfo = productInfoUseCase.updateProductInfo(productInfoId, brand, category, request.productInfo());
+
+        return productUseCase.updateMultipleProduct(productInfo, request.variants(), optionValueMap);
+    }
 }
