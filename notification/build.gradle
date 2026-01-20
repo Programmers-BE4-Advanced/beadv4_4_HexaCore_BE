@@ -37,6 +37,9 @@ dependencies {
 
     // MongoDB
     implementation('org.springframework.boot:spring-boot-starter-data-mongodb')
+
+    // AWS SQS
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-sqs:4.0.0-RC1'
 }
 
 tasks.named('test') {
