@@ -27,7 +27,7 @@ public enum FailureCode {
     INVALID_BID_PRICE_SELL(HttpStatus.BAD_REQUEST, "INVALID_BID_PRICE_SELL","판매 입찰가는 즉시 판매가보다 높아야 합니다."),
     SELF_TRADING_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "SELF_TRADING_NOT_ALLOWED", "본인의 입찰 상품과는 거래할 수 없습니다."),
     WALLET_CHARGE_FAILED(HttpStatus.BAD_REQUEST, "WALLET_CHARGE_FAILED", "예치금 충전에 실패하였습니다."),
-
+    AMOUNT_MISMATCH(HttpStatus.BAD_REQUEST, "AMOUNT_MISMATCH", "결제 금액이 일치하지 않습니다."),
     /**
      * 401 Unauthorized
      */

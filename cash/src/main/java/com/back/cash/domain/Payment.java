@@ -53,4 +53,15 @@ public class Payment extends BaseTimeEntity {
     public void markAsDone() {
         this.status = PaymentStatus.DONE;
     }
+
+    public void updateAmounts(BigDecimal walletUse, BigDecimal pgNeed) {
+        this.walletUsedAmount = walletUse;
+        this.pgAmount = pgNeed;
+    }
+
+    public void issueTossOrderIdIfAbsent(String tossOrderId) {
+        if (this.tossOrderId == null) {
+            this.tossOrderId = tossOrderId;
+        }
+    }
 }
