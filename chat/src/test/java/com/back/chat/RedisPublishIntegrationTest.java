@@ -1,6 +1,6 @@
 package com.back.chat;
 
-import com.back.chat.adapter.out.RedisChatMessagePublisher;
+import com.back.chat.adapter.out.redis.RedisChatMessagePublisher;
 import com.back.chat.event.payload.ChatMessagePayload;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

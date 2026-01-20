@@ -5,5 +5,23 @@ dependencies {
     implementation project(":security")
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-websocket'
+    testImplementation 'org.springframework:spring-messaging'
+
+
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+    // ---- Lombok ----
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+}
+
+test {
+    useJUnitPlatform()
 }
 
