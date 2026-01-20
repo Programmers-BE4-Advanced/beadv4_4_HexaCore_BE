@@ -78,6 +78,12 @@ public class ProductUseCase {
         return convertToDto(updatedProducts, updatedProductOptionValues, updatedProductImages);
     }
 
+    @Transactional
+    public void deleteMultipleProduct(Long productInfoId) {
+        List<Product> deletedProducts = productSupport.getAllProductsByProductInfoId(productInfoId);
+        deleteProducts(deletedProducts);
+    }
+
     private void handleCreations(ProductInfo productInfo, List<ProductVariantUpdateRequestDto> variantsToCreate, Map<Long, OptionValue> optionValueMap) {
         List<Product> createdProducts = new ArrayList<>();
         List<ProductOptionValues> createdProductOptionValues = new ArrayList<>();

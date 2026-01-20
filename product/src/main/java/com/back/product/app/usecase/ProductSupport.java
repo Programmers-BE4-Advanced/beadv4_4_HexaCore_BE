@@ -1,5 +1,7 @@
 package com.back.product.app.usecase;
 
+import com.back.common.code.FailureCode;
+import com.back.common.exception.CustomException;
 import com.back.product.adapter.out.*;
 import com.back.product.domain.*;
 import lombok.RequiredArgsConstructor;
@@ -78,5 +80,13 @@ public class ProductSupport {
     @Transactional(readOnly = true)
     public List<ProductImage> getAllProductImagesByProductsIn(List<Product> products) {
         return productImageRepository.findALlByProductIn(products);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Product> getAllProductsByProductInfoId(Long productInfoId) {
+        ProductInfo productInfo = productInfoRepository.findById(productInfoId)
+                .orElseThrow(() -> new CustomException(FailureCode.PRODUCT_NOT_FOUND));
+
+        return productRepository.findAllByProductInfo(productInfo);
     }
 }

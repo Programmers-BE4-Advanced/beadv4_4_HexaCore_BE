@@ -36,4 +36,15 @@ public interface ProductApiController {
     @ApiResponse(responseCode = "403", description = "권한 없음", content = @Content)
     @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     CommonResponse<?> updateProduct(Long productInfoId, ProductUpdateRequestDto request);
+
+    @Operation(summary = "상품 삭제", description = """
+            상품을 삭제합니다.
+            상품의 기본 정보 (ProductInfo)에 매칭되는 모든 상품들(Product)을 삭제합니다.
+            삭제되는 상품에 매칭되는 상품 옵션(ProductOptionValues) 및 이미지(ProductImage)를 삭제합니다.
+            모든 삭제는 Soft Delete를 준수합니다.
+    """)
+    @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content)
+    @ApiResponse(responseCode = "403", description = "권한 없음", content = @Content)
+    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    CommonResponse<?> deleteProduct(Long productInfoId);
 }
