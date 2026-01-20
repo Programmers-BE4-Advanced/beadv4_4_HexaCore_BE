@@ -1,5 +1,6 @@
 package com.back.settlement.app.dto.response;
 
+import com.back.settlement.domain.SettlementEventType;
 import com.back.settlement.domain.SettlementItemStatus;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -10,12 +11,12 @@ public record SettlementItemResponse(
         Long settlementItemId,
         Long orderId,
         Long productId,
-        Long buyerId,
-        Long sellerId,
+        Long payerId,
+        Long payeeId,
+        String sellerName,
+        SettlementEventType eventType,
         SettlementItemStatus status,
-        BigDecimal salesAmount,
-        BigDecimal feeAmount,
-        BigDecimal netAmount,
-        LocalDateTime transactionAt
+        BigDecimal amount,
+        LocalDateTime confirmedAt
 ) {
 }
