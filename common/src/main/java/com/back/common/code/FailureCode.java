@@ -54,6 +54,9 @@ public enum FailureCode {
     SETTLEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "SETTLEMENT_NOT_FOUND", "해당 정산서를 찾을 수 없습니다."),
     CHAT_ROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "CHAT_ROOM_NOT_FOUND", "해당 채팅방을 찾을 수 없습니다."),
     WALLET_NOT_FOUND(HttpStatus.NOT_FOUND, "WALLET_NOT_FOUND", "사용자 지갑을 찾을 수 없습니다."),
+    BRAND_NOT_FOUND(HttpStatus.NOT_FOUND, "BRAND_NOT_FOUND", "존재하지 않는 브랜드입니다."),
+    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY_NOT_FOUND", "존재하지 않는 카테고리입니다."),
+    OPTION_VALUE_NOT_FOUND(HttpStatus.NOT_FOUND, "OPTION_VALUE_NOT_FOUND", "존재하지 않는 옵션 값입니다."),
 
     /**
      * 405 Method Not Allowed
@@ -67,6 +70,7 @@ public enum FailureCode {
     CONFLICT(HttpStatus.CONFLICT, "CONFLICT", "이미 존재하는 리소스입니다."),
     BRAND_NAME_DUPLICATE(HttpStatus.CONFLICT, "BRAND_NAME_DUPLICATE", "이미 존재하는 브랜드 이름입니다."),
     CATEGORY_NAME_DUPLICATE(HttpStatus.CONFLICT, "CATEGORY_NAME_DUPLICATE", "이미 존재하는 카테고리 이름입니다."),
+    DUPLICATE_PRODUCT_INFO(HttpStatus.CONFLICT, "DUPLICATE_PRODUCT_INFO", "이미 존재하는 상품 정보입니다."),
 
     /**
      * 500 Internal Server Error
