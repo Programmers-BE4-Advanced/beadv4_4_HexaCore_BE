@@ -2,8 +2,11 @@ package com.back.settlement.batch;
 
 import static com.back.settlement.domain.SettlementPolicy.CHUNK_SIZE;
 
-import com.back.settlement.app.dto.request.SettlementWithItems;
-import com.back.settlement.app.facade.SettlementFacade;
+import com.back.settlement.app.dto.internal.SettlementWithItems;
+import com.back.settlement.app.support.SettlementSupport;
+import com.back.settlement.app.support.YearMonthUtils;
+import com.back.settlement.app.usecase.SettlementCreateUseCase;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.Iterator;
 import java.util.List;
@@ -25,7 +28,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 @RequiredArgsConstructor
 public class SettlementCollectItemsAndCalculateSettlementsStepConfig {
-    private final SettlementFacade settlementFacade;
+    private final SettlementSupport settlementSupport;
+    private final SettlementCreateUseCase settlementCreateUseCase;
 
     @Bean
     public Step collectItemsAndCalculateSettlementsStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
@@ -50,8 +54,10 @@ public class SettlementCollectItemsAndCalculateSettlementsStepConfig {
             @Override
             public Long read() {
                 if (!initialized) {
-                    YearMonth targetMonth = parseTargetMonth(targetMonthStr);
-                    List<Long> payeeIds = settlementFacade.findUnsettledPayeeIds(targetMonth);
+                    YearMonth targetMonth = YearMonthUtils.parseOrDefault(targetMonthStr);
+                    LocalDateTime startAt = YearMonthUtils.startOfMonth(targetMonth);
+                    LocalDateTime endAt = YearMonthUtils.endOfMonth(targetMonth);
+                    List<Long> payeeIds = settlementSupport.findUnsettledPayeeIds(startAt, endAt);
                     payeeIdIterator = payeeIds.iterator();
                     initialized = true;
                     log.info("정산 대상 수취인(payee) 수: {}", payeeIds.size());
@@ -71,7 +77,7 @@ public class SettlementCollectItemsAndCalculateSettlementsStepConfig {
     @Bean
     @StepScope
     public ItemProcessor<Long, SettlementWithItems> settlementProcessor(@Value("#{jobParameters['targetMonth']}") String targetMonthStr) {
-        return payeeId -> settlementFacade.createSettlementForPayee(payeeId, parseTargetMonth(targetMonthStr));
+        return payeeId -> settlementCreateUseCase.createSettlementForPayee(payeeId, YearMonthUtils.parseOrDefault(targetMonthStr));
     }
 
     /**
@@ -81,16 +87,12 @@ public class SettlementCollectItemsAndCalculateSettlementsStepConfig {
     public ItemWriter<SettlementWithItems> settlementWriter() {
         return chunk -> {
             for (SettlementWithItems settlementWithItems : chunk) {
-                settlementFacade.saveSettlement(settlementWithItems);
+                settlementCreateUseCase.saveSettlementWithItems(
+                        settlementWithItems.settlement(),
+                        settlementWithItems.items()
+                );
             }
             log.info("정산 저장 완료. 건수={}", chunk.size());
         };
-    }
-
-    private YearMonth parseTargetMonth(String targetMonthStr) {
-        if (targetMonthStr == null) {
-            return YearMonth.now().minusMonths(1);
-        }
-        return YearMonth.parse(targetMonthStr);
     }
 }

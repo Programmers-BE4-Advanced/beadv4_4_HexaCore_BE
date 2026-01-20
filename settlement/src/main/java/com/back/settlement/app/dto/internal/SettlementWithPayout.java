@@ -1,4 +1,4 @@
-package com.back.settlement.app.dto.request;
+package com.back.settlement.app.dto.internal;
 
 import com.back.settlement.app.event.SettlementPayoutRequest;
 import com.back.settlement.domain.Settlement;

@@ -168,6 +168,39 @@ Market 모듈에서 정산 대상 주문을 조회하여 `SettlementItem`을 생
 
 ---
 
+## UseCase 역할
+
+| UseCase | 역할 | 사용처 |
+|---------|------|--------|
+| **SettlementReadUseCase** | 정산 조회 (판매자별 정산서, 정산 항목 조회) | Facade, Controller |
+| **SettlementItemAddUseCase** | 정산 항목 생성 (판매대금 + 수수료 항목) | Step 1 |
+| **SettlementCreateUseCase** | 정산서 생성 및 금액 계산 | Step 2 |
+| **SettlementCompleteUseCase** | 정산 완료 처리 및 캐시 지급 요청 | Step 3 |
+
+### 내부 DTO (dto/internal)
+
+배치 처리 과정에서 Step 간 데이터 전달에 사용되는 내부 DTO입니다.
+
+| DTO | 역할 |
+|-----|------|
+| **SettlementWithItems** | 정산서 + 정산 항목 묶음 (Step 2에서 사용) |
+| **SettlementWithPayout** | 정산서 + 지급 요청 묶음 (Step 3에서 사용) |
+
+### YearMonthUtils
+
+날짜 처리 유틸리티 클래스입니다.
+
+```java
+// 문자열 파싱 (null인 경우 전월 기본값)
+YearMonth targetMonth = YearMonthUtils.parseOrDefault(targetMonthStr);
+
+// 월의 시작/종료 시점
+LocalDateTime startAt = YearMonthUtils.startOfMonth(targetMonth);  // yyyy-MM-01 00:00:00
+LocalDateTime endAt = YearMonthUtils.endOfMonth(targetMonth);      // yyyy-MM-{말일} 23:59:59
+```
+
+---
+
 ## 상태 흐름
 
 ### Settlement 상태
@@ -357,6 +390,9 @@ settlement/
 │       └── SettlementItemRepository.java
 ├── app/
 │   ├── dto/
+│   │   ├── internal/
+│   │   │   ├── SettlementWithItems.java      # 배치용 내부 DTO
+│   │   │   └── SettlementWithPayout.java     # 배치용 내부 DTO
 │   │   ├── request/
 │   │   └── response/
 │   ├── event/
@@ -365,12 +401,13 @@ settlement/
 │   ├── facade/
 │   │   └── SettlementFacade.java
 │   ├── support/
-│   │   └── SettlementSupport.java
+│   │   ├── SettlementSupport.java
+│   │   └── YearMonthUtils.java               # 날짜 유틸리티
 │   └── usecase/
-│       ├── SettlementUseCase.java
-│       ├── SettlementItemAddUseCase.java
-│       ├── SettlementCreateUseCase.java
-│       └── SettlementCompleteUseCase.java
+│       ├── SettlementReadUseCase.java        # 정산 조회
+│       ├── SettlementItemAddUseCase.java     # 정산 항목 추가
+│       ├── SettlementCreateUseCase.java      # 정산서 생성
+│       └── SettlementCompleteUseCase.java    # 정산 완료 처리
 ├── batch/
 │   ├── SettlementJobConfig.java
 │   ├── SettlementJobLauncher.java

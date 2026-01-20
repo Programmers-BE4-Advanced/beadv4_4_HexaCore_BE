@@ -2,8 +2,9 @@ package com.back.settlement.batch;
 
 import static com.back.settlement.domain.SettlementPolicy.CHUNK_SIZE;
 
-import com.back.settlement.app.dto.request.SettlementWithPayout;
-import com.back.settlement.app.facade.SettlementFacade;
+import com.back.settlement.app.dto.internal.SettlementWithPayout;
+import com.back.settlement.app.support.SettlementSupport;
+import com.back.settlement.app.usecase.SettlementCompleteUseCase;
 import com.back.settlement.domain.Settlement;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 @RequiredArgsConstructor
 public class SettlementMonthSettlementStepConfig {
-    private final SettlementFacade settlementFacade;
+    private final SettlementSupport settlementSupport;
+    private final SettlementCompleteUseCase settlementCompleteUseCase;
 
     @Bean
     public Step monthSettlementStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
@@ -50,7 +52,7 @@ public class SettlementMonthSettlementStepConfig {
             @Override
             public Settlement read() {
                 if (currentPage == null || index >= currentPage.size()) {
-                    currentPage = settlementFacade.findPendingSettlements(PageRequest.of(page++, CHUNK_SIZE));
+                    currentPage = settlementSupport.findPendingSettlements(PageRequest.of(page++, CHUNK_SIZE));
                     index = 0;
 
                     if (currentPage.isEmpty()) {
@@ -67,7 +69,7 @@ public class SettlementMonthSettlementStepConfig {
      */
     @Bean
     public ItemProcessor<Settlement, SettlementWithPayout> settlementCompleteProcessor() {
-        return settlementFacade::completeSettlement;
+        return settlementCompleteUseCase::completeSettlement;
     }
 
     /**
@@ -79,7 +81,7 @@ public class SettlementMonthSettlementStepConfig {
             List<SettlementWithPayout> items = chunk.getItems().stream()
                     .map(item -> (SettlementWithPayout) item)
                     .toList();
-            settlementFacade.saveAndRequestPayout(items);
+            settlementCompleteUseCase.saveAndRequestPayout(items);
         };
     }
 }
