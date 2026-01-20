@@ -72,4 +72,11 @@ public class ProductFacade {
 
         return productUseCase.updateMultipleProduct(productInfo, request.variants(), optionValueMap);
     }
+
+    @Transactional
+    public void deleteProduct(Long productInfoId) {
+        productUseCase.deleteMultipleProduct(productInfoId);
+
+        productInfoUseCase.deleteProductInfo(productInfoId);
+    }
 }

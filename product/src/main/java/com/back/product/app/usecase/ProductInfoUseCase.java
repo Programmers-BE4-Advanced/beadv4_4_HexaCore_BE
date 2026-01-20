@@ -52,4 +52,12 @@ public class ProductInfoUseCase {
 
         return productInfo;
     }
+
+    @Transactional
+    public void deleteProductInfo(Long productInfoId) {
+        ProductInfo productInfo = productSupport.findProductInfoById(productInfoId)
+                .orElseThrow(() -> new CustomException(FailureCode.PRODUCT_NOT_FOUND));
+
+        productInfoRepository.delete(productInfo);
+    }
 }
