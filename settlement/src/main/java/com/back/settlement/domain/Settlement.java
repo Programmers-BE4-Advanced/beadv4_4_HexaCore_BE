@@ -1,6 +1,7 @@
 package com.back.settlement.domain;
 
 import com.back.common.entity.BaseTimeEntity;
+import com.back.settlement.app.dto.request.SettlementRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -32,6 +33,10 @@ public class Settlement extends BaseTimeEntity {
     @Column(name = "seller_id")
     private Long sellerId;
 
+    @NotNull
+    @Column(name = "seller_name")
+    private String sellerName;
+
     @Enumerated(EnumType.STRING)
     @NotNull
     @Column(nullable = false, length = 20)
@@ -62,4 +67,33 @@ public class Settlement extends BaseTimeEntity {
     @NotNull
     @Column(name = "total_net_amount", precision = 15, scale = 2)
     private BigDecimal totalNetAmount;
+
+    public static Settlement createSettlement(SettlementRequest request) {
+        return Settlement.builder()
+                .sellerId(request.sellerId())
+                .sellerName(request.sellerName())
+                .status(SettlementStatus.PENDING)
+                .startAt(request.startAt())
+                .endAt(request.endAt())
+                .expectedAt(calculateExpectedDate(request.endAt()))
+                .completedAt(null)
+                .totalSalesAmount(request.totalSalesAmount())
+                .totalFeeAmount(request.totalFeeAmount())
+                .totalNetAmount(request.totalNetAmount())
+                .build();
+    }
+
+    private static LocalDateTime calculateExpectedDate(LocalDateTime endAt) {
+        return endAt.plusMonths(1)
+                .withDayOfMonth(10)
+                .withHour(0)
+                .withMinute(0)
+                .withSecond(0)
+                .withNano(0);
+    }
+
+    public void complete() {
+        this.status = SettlementStatus.COMPLETED;
+        this.completedAt = LocalDateTime.now();
+    }
 }
