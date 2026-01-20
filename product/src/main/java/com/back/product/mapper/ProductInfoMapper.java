@@ -27,6 +27,7 @@ public class ProductInfoMapper {
 
     public ProductInfoDto toDto(ProductInfo productInfo) {
         return ProductInfoDto.builder()
+                .productInfoId(productInfo.getId())
                 .brand(brandMapper.toDto(productInfo.getBrand()))
                 .category(categoryMapper.toDto(productInfo.getCategory()))
                 .name(productInfo.getName())
