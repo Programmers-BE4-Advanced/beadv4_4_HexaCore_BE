@@ -1,6 +1,7 @@
 package com.back.cash.domain;
 
 import com.back.cash.domain.enums.PaymentStatus;
+import com.back.cash.domain.enums.RelType;
 import com.back.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,6 +13,15 @@ import java.math.BigDecimal;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
+@Table(
+        name = "payment",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_payment_rel",
+                        columnNames = {"rel_type", "rel_id"}
+                )
+        }
+)
 public class Payment extends BaseTimeEntity {
 
     @Id
@@ -20,6 +30,10 @@ public class Payment extends BaseTimeEntity {
 
     private Long userId;
 
+    @Enumerated(EnumType.STRING)
+    private RelType relType;
+    private Long relId;
+
     private String tossOrderId; // 토스에서 사용할 주문 번호
 
     private String paymentKey; // PG사 고유 키
@@ -27,8 +41,16 @@ public class Payment extends BaseTimeEntity {
     @Column(precision = 19, scale = 2)
     private BigDecimal totalAmount;
 
-    private String method; // 결제 수단
+    @Column(precision = 19, scale = 2)
+    private BigDecimal walletUsedAmount; // 지갑(예치금) 사용 금액
+
+    @Column(precision = 19, scale = 2)
+    private BigDecimal pgAmount; // PG 결제 금액
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
+
+    public void markAsDone() {
+        this.status = PaymentStatus.DONE;
+    }
 }
