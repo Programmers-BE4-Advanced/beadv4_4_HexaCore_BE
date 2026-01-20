@@ -7,6 +7,7 @@ import com.back.product.domain.ProductOptionValues;
 import com.back.product.dto.ProductDto;
 import com.back.product.dto.ProductOptionDto;
 import com.back.product.dto.request.ProductVariantCreateRequestDto;
+import com.back.product.dto.request.ProductVariantUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +24,13 @@ public class ProductMapper {
         return Product.builder()
                 .productInfo(productInfo)
                 .inventory(variant.inventory())
+                .build();
+    }
+
+    public Product toEntity(ProductInfo productInfo, Long inventory) {
+        return Product.builder()
+                .productInfo(productInfo)
+                .inventory(inventory)
                 .build();
     }
 
