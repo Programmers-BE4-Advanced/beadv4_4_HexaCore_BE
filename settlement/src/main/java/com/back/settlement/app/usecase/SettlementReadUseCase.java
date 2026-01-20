@@ -16,14 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class SettlementUseCase {
+public class SettlementReadUseCase {
     private final SettlementSupport settlementSupport;
     private final SettlementMapper settlementMapper;
 
     public List<SettlementResponse> getSettlements(Long sellerId) {
         List<Settlement> settlements = settlementSupport.findBySellerId(sellerId);
-        return settlements
-                .stream()
+        return settlements.stream()
                 .map(settlementMapper::toSettlementResponse)
                 .toList();
     }

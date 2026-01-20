@@ -3,7 +3,7 @@ package com.back.settlement.app.usecase;
 import com.back.settlement.adapter.out.SettlementRepository;
 import com.back.settlement.adapter.out.feign.cash.CashClient;
 import com.back.settlement.app.event.SettlementPayoutRequest;
-import com.back.settlement.app.dto.request.SettlementWithPayout;
+import com.back.settlement.app.dto.internal.SettlementWithPayout;
 import com.back.settlement.domain.Settlement;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

@@ -25,11 +25,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("SettlementUseCase 테스트")
-class SettlementUseCaseTest {
+@DisplayName("SettlementReadUseCase 테스트")
+class SettlementReadUseCaseTest {
 
     @InjectMocks
-    private SettlementUseCase settlementUseCase;
+    private SettlementReadUseCase settlementReadUseCase;
 
     @Mock
     private SettlementSupport settlementSupport;
@@ -46,24 +46,18 @@ class SettlementUseCaseTest {
         void getSettlements_Success() {
             // given
             Long sellerId = 1L;
-
-            Settlement settlement =
-                    SettlementFixture.createCompletedSettlement(1L, sellerId);
-
+            Settlement settlement = SettlementFixture.createCompletedSettlement(1L, sellerId);
             SettlementResponse expectedResponse = SettlementResponse.builder()
                     .settlementId(1L)
                     .sellerId(sellerId)
                     .status(SettlementStatus.COMPLETED)
                     .build();
 
-            given(settlementSupport.findBySellerId(sellerId))
-                    .willReturn(List.of(settlement));
-            given(settlementMapper.toSettlementResponse(settlement))
-                    .willReturn(expectedResponse);
+            given(settlementSupport.findBySellerId(sellerId)).willReturn(List.of(settlement));
+            given(settlementMapper.toSettlementResponse(settlement)).willReturn(expectedResponse);
 
             // when
-            List<SettlementResponse> result =
-                    settlementUseCase.getSettlements(sellerId);
+            List<SettlementResponse> result = settlementReadUseCase.getSettlements(sellerId);
 
             // then
             assertThat(result).hasSize(1);
@@ -75,13 +69,10 @@ class SettlementUseCaseTest {
         void getSettlements_EmptyResult() {
             // given
             Long sellerId = 1L;
-
-            given(settlementSupport.findBySellerId(sellerId))
-                    .willReturn(List.of());
+            given(settlementSupport.findBySellerId(sellerId)).willReturn(List.of());
 
             // when
-            List<SettlementResponse> result =
-                    settlementUseCase.getSettlements(sellerId);
+            List<SettlementResponse> result = settlementReadUseCase.getSettlements(sellerId);
 
             // then
             assertThat(result).isEmpty();
@@ -99,8 +90,7 @@ class SettlementUseCaseTest {
             Long settlementItemId = 1L;
             Long payeeId = 100L;
 
-            SettlementItem settlementItem =
-                    SettlementItemFixture.createIncludedItem(settlementItemId, payeeId);
+            SettlementItem settlementItem = SettlementItemFixture.createIncludedItem(settlementItemId, payeeId);
 
             SettlementItemResponse expectedResponse = SettlementItemResponse.builder()
                     .settlementItemId(settlementItemId)
@@ -108,14 +98,11 @@ class SettlementUseCaseTest {
                     .status(SettlementItemStatus.INCLUDED)
                     .build();
 
-            given(settlementSupport.findSettlementItemById(settlementItemId))
-                    .willReturn(settlementItem);
-            given(settlementMapper.toSettlementItemResponse(settlementItem))
-                    .willReturn(expectedResponse);
+            given(settlementSupport.findSettlementItemById(settlementItemId)).willReturn(settlementItem);
+            given(settlementMapper.toSettlementItemResponse(settlementItem)).willReturn(expectedResponse);
 
             // when
-            SettlementItemResponse result =
-                    settlementUseCase.getSettlementItem(settlementItemId, payeeId);
+            SettlementItemResponse result = settlementReadUseCase.getSettlementItem(settlementItemId, payeeId);
 
             // then
             assertThat(result.settlementItemId()).isEqualTo(settlementItemId);
@@ -130,15 +117,13 @@ class SettlementUseCaseTest {
             Long ownerSellerId = 100L;
             Long otherSellerId = 200L;
 
-            SettlementItem settlementItem =
-                    SettlementItemFixture.createIncludedItem(settlementItemId, ownerSellerId);
+            SettlementItem settlementItem = SettlementItemFixture.createIncludedItem(settlementItemId, ownerSellerId);
 
-            given(settlementSupport.findSettlementItemById(settlementItemId))
-                    .willReturn(settlementItem);
+            given(settlementSupport.findSettlementItemById(settlementItemId)).willReturn(settlementItem);
 
             // when & then
-            assertThatThrownBy(() ->
-                    settlementUseCase.getSettlementItem(settlementItemId, otherSellerId)
+            assertThatThrownBy(
+                    () -> settlementReadUseCase.getSettlementItem(settlementItemId, otherSellerId)
             ).isInstanceOf(UnauthorizedException.class);
         }
     }
