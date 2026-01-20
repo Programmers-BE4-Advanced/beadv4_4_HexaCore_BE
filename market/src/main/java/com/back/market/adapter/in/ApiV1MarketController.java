@@ -3,26 +3,24 @@ package com.back.market.adapter.in;
 import com.back.common.response.CommonResponse;
 import com.back.market.app.MarketFacade;
 import com.back.market.dto.request.BiddingRequestDto;
-import jakarta.validation.Valid;
+import com.back.market.dto.response.InstantBuyPriceResponseDto;
+import com.back.market.dto.response.InstantSellPriceResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/market")
-public class ApiV1MarketController {
+public class ApiV1MarketController implements ApiV1Market{
 
     private final MarketFacade marketFacade;
 
-    @PostMapping("/bids/buy")
+    @Override
     public CommonResponse<Long> registerBuyBid(
             // TODO: 인증 로직 구현 완료시 수정 필요
-            // @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestBody @Valid BiddingRequestDto requestDto
+            // CustomUserDetails userDetails,
+            BiddingRequestDto requestDto
     ) {
         // TODO: 인증 적용 시 하드코딩해둔 값 삭제 필요
         // Long userId = userDetails.getId();
@@ -34,11 +32,11 @@ public class ApiV1MarketController {
         return CommonResponse.successWithData(HttpStatus.CREATED, biddingId);
     }
 
-    @PostMapping("/bids/sell")
+    @Override
     public CommonResponse<Long> registerSellBid(
             // TODO: 인증 로직 구현 완료시 수정 필요
-            // @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestBody @Valid BiddingRequestDto requestDto
+            // CustomUserDetails userDetails,
+            BiddingRequestDto requestDto
     ) {
         // TODO: 인증 적용 시 하드코딩해둔 값 삭제 필요
         // Long userId = userDetails.getId();
@@ -48,6 +46,32 @@ public class ApiV1MarketController {
         Long biddingId = marketFacade.registerSellBid(userId, requestDto);
 
         return CommonResponse.successWithData(HttpStatus.CREATED, biddingId);
+    }
+
+    @Override
+    public CommonResponse<InstantBuyPriceResponseDto> getBuyNowPrice(Long productId) {
+        InstantBuyPriceResponseDto response = marketFacade.getBuyNowPrice(productId);
+        return CommonResponse.successWithData(HttpStatus.OK, response);
+    }
+
+    @Override
+    public CommonResponse<InstantSellPriceResponseDto> getSellNowPrice(Long productId) {
+        InstantSellPriceResponseDto response = marketFacade.getSellNowPrice(productId);
+        return CommonResponse.successWithData(HttpStatus.OK, response);
+    }
+
+    @Override
+    public CommonResponse<Long> buyNow(BiddingRequestDto requestDto) {
+        Long userId = 1L; //TODO: 인증 적용 시 수정
+        Long orderId = marketFacade.purchaseNow(userId, requestDto);
+        return CommonResponse.successWithData(HttpStatus.CREATED, orderId);
+    }
+
+    @Override
+    public CommonResponse<Long> sellNow(BiddingRequestDto requestDto) {
+        Long userId = 2L; //TODO: 인증 적용 시 수정
+        Long orderId = marketFacade.sellNow(userId, requestDto);
+        return CommonResponse.successWithData(HttpStatus.CREATED, orderId);
     }
 
 }
