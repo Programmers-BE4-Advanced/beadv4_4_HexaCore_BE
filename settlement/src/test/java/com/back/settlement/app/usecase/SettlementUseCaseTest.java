@@ -97,14 +97,14 @@ class SettlementUseCaseTest {
         void getSettlementItem_Success() {
             // given
             Long settlementItemId = 1L;
-            Long sellerId = 100L;
+            Long payeeId = 100L;
 
             SettlementItem settlementItem =
-                    SettlementItemFixture.createIncludedItem(settlementItemId, sellerId);
+                    SettlementItemFixture.createIncludedItem(settlementItemId, payeeId);
 
             SettlementItemResponse expectedResponse = SettlementItemResponse.builder()
                     .settlementItemId(settlementItemId)
-                    .sellerId(sellerId)
+                    .payeeId(payeeId)
                     .status(SettlementItemStatus.INCLUDED)
                     .build();
 
@@ -115,11 +115,11 @@ class SettlementUseCaseTest {
 
             // when
             SettlementItemResponse result =
-                    settlementUseCase.getSettlementItem(settlementItemId, sellerId);
+                    settlementUseCase.getSettlementItem(settlementItemId, payeeId);
 
             // then
             assertThat(result.settlementItemId()).isEqualTo(settlementItemId);
-            assertThat(result.sellerId()).isEqualTo(sellerId);
+            assertThat(result.payeeId()).isEqualTo(payeeId);
         }
 
         @Test

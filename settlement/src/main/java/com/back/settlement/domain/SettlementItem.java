@@ -1,6 +1,9 @@
 package com.back.settlement.domain;
 
+import static com.back.settlement.domain.SettlementPolicy.PLATFORM_FEE_RATE;
+
 import com.back.common.entity.BaseTimeEntity;
+import com.back.settlement.app.event.SettlementItemRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,7 +17,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,8 +38,7 @@ public class SettlementItem extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "settlement_id")
-    @NotNull
-    private Settlement settlement;
+    private Settlement settlement; // nullable: 일일 수집 시 null, 월별 정산 시 연결
 
     @NotNull
     @Column(name = "order_id")
@@ -45,30 +49,66 @@ public class SettlementItem extends BaseTimeEntity {
     private Long productId;
 
     @NotNull
-    @Column(name = "buyer_id")
-    private Long buyerId;
+    @Column(name = "payer_id")
+    private Long payerId;  // 지불자
 
+    @Column(name = "payee_id")
+    private Long payeeId;  // 수취인
+
+    @Column(name = "seller_name")
+    private String sellerName;
+
+    @Column(name = "amount")
     @NotNull
-    @Column(name = "seller_id")
-    private Long sellerId;
+    private BigDecimal amount;  // 금액
+
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private SettlementEventType eventType;
 
     @Enumerated(EnumType.STRING)
     @NotNull
     private SettlementItemStatus status;
 
     @NotNull
-    @Column(name = "sales_amount", precision = 15, scale = 2)
-    private BigDecimal salesAmount;
+    @Column(name = "confirmed_at")
+    private LocalDateTime confirmedAt; // 구매 확정 시간
 
-    @NotNull
-    @Column(name = "fee_amount", precision = 15, scale = 2)
-    private BigDecimal feeAmount;
+    public static List<SettlementItem> createSettlementItem(SettlementItemRequest request, Long systemPayeeId) {
+        BigDecimal price = request.price();
+        BigDecimal feeAmount = price.multiply(PLATFORM_FEE_RATE).setScale(0, RoundingMode.HALF_UP);
+        BigDecimal netAmount = price.subtract(feeAmount);
 
-    @NotNull
-    @Column(name = "net_amount", precision = 15, scale = 2)
-    private BigDecimal netAmount;
+        SettlementItem salesItem = SettlementItem.builder()
+                .settlement(null)
+                .orderId(request.orderId())
+                .productId(request.productId())
+                .payerId(request.buyerId())
+                .payeeId(request.sellerId())
+                .sellerName(request.sellerName())
+                .amount(netAmount)
+                .eventType(SettlementEventType.SETTLEMENT_PRODUCT_SALES_AMOUNT)
+                .status(SettlementItemStatus.INCLUDED)
+                .confirmedAt(request.confirmedAt())
+                .build();
 
-    @NotNull
-    @Column(name = "transaction_at")
-    private LocalDateTime transactionAt; // 결제 시간
+        SettlementItem feeItem = SettlementItem.builder()
+                .settlement(null)
+                .orderId(request.orderId())
+                .productId(request.productId())
+                .payerId(request.buyerId())
+                .payeeId(systemPayeeId)
+                .sellerName(request.sellerName())
+                .amount(feeAmount)
+                .eventType(SettlementEventType.SETTLEMENT_PRODUCT_SALES_FEE)
+                .status(SettlementItemStatus.INCLUDED)
+                .confirmedAt(request.confirmedAt())
+                .build();
+
+        return List.of(salesItem, feeItem);
+    }
+
+    public void addSettlement(Settlement settlement) {
+        this.settlement = settlement;
+    }
 }

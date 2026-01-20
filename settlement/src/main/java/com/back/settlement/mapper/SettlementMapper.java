@@ -14,6 +14,7 @@ public class SettlementMapper {
         return SettlementResponse.builder()
                 .settlementId(settlement.getId())
                 .sellerId(settlement.getSellerId())
+                .sellerName(settlement.getSellerName())
                 .status(settlement.getStatus())
                 .expectedAt(settlement.getExpectedAt())
                 .startAt(settlement.getStartAt())
@@ -36,13 +37,13 @@ public class SettlementMapper {
                 .settlementItemId(settlementItem.getId())
                 .orderId(settlementItem.getOrderId())
                 .productId(settlementItem.getProductId())
-                .buyerId(settlementItem.getBuyerId())
-                .sellerId(settlementItem.getSellerId())
+                .payerId(settlementItem.getPayerId())
+                .payeeId(settlementItem.getPayeeId())
+                .sellerName(settlementItem.getSellerName())
+                .eventType(settlementItem.getEventType())
                 .status(settlementItem.getStatus())
-                .salesAmount(settlementItem.getSalesAmount())
-                .feeAmount(settlementItem.getFeeAmount())
-                .netAmount(settlementItem.getNetAmount())
-                .transactionAt(settlementItem.getTransactionAt())
+                .amount(settlementItem.getAmount())
+                .confirmedAt(settlementItem.getConfirmedAt())
                 .build();
     }
 
