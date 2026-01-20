@@ -3,7 +3,7 @@ package com.back.chat.adapter.out;
 import com.back.chat.domain.ChatMessage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.awt.print.Pageable;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 

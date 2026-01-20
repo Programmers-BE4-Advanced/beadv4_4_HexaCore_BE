@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @Service
@@ -24,7 +24,7 @@ public class ChatGetHistoryUseCase {
         }
 
         // hasNext 판별 위해 +1
-        Pageable pageable = (Pageable) PageRequest.of(0, PAGE_SIZE + 1);
+        Pageable pageable = PageRequest.of(0, PAGE_SIZE + 1);
 
 
         List<ChatMessage> fetched;
