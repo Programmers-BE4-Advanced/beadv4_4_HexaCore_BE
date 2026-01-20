@@ -10,8 +10,11 @@ import com.back.notification.domain.Notification;
 import com.back.notification.domain.NotificationProduct;
 import com.back.notification.domain.enums.NotificationTargetRole;
 import com.back.notification.domain.enums.Type;
+import com.back.notification.dto.NotificationCreatedEvent;
+import com.back.notification.dto.PushDispatchMessage;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -122,6 +125,25 @@ public class NotificationMapper {
                 ))
                 .deepLink("/products/" + event.productId())     // Todo : 실제 딥링크로 수정
                 .isRead(false)
+                .build();
+    }
+
+    public NotificationCreatedEvent toNotificationCreatedEvent(List<Notification> notifications) {
+        return NotificationCreatedEvent.builder()
+                .notificationIds(notifications
+                        .stream()
+                        .map(Notification::getId)
+                        .toList()
+                )
+                .build();
+    }
+
+    public PushDispatchMessage toPushDispatchMessage(Notification notification, String fcmToken) {
+        return PushDispatchMessage.builder()
+                .title(notification.getTitle())
+                .body(notification.getBody())
+                .deepLink(notification.getDeepLink())
+                .fcmToken(fcmToken)
                 .build();
     }
 }
