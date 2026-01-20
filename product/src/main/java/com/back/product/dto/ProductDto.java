@@ -6,7 +6,7 @@ import java.util.List;
 
 @Builder
 public record ProductDto(
-        ProductInfoDto productInfo,
+        Long productId,
         Long inventory,
         List<ProductOptionDto> options,
         List<String> imageUrls

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 public class ProductOptionMapper {
     public ProductOptionDto toDto(ProductOptionValues productOptionValues) {
         return ProductOptionDto.builder()
+                .productOptionValueId(productOptionValues.getId())
                 .groupName(productOptionValues.getOptionValue().getOptionGroup().getName())
                 .value(productOptionValues.getOptionValue().getValue())
                 .build();

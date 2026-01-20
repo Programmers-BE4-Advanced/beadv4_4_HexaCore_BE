@@ -6,6 +6,8 @@ import com.back.product.dto.CategoryDto;
 import com.back.product.dto.ProductDto;
 import com.back.product.dto.request.*;
 import com.back.product.dto.BrandDto;
+import com.back.product.dto.response.ProductResponseDto;
+import com.back.product.mapper.ProductInfoMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,8 @@ public class ProductFacade {
     private final OptionUseCase optionUseCase;
     private final ProductInfoUseCase productInfoUseCase;
     private final ProductUseCase productUseCase;
+    private final ProductInfoMapper productInfoMapper;
+
 
     @Transactional(readOnly = true)
     public List<BrandDto> getBrands() {
@@ -44,7 +48,7 @@ public class ProductFacade {
     }
 
     @Transactional
-    public List<ProductDto> createProduct(@Valid ProductCreateRequestDto request) {
+    public ProductResponseDto createProduct(@Valid ProductCreateRequestDto request) {
         Brand brand = brandUseCase.findBrandExists(request.productInfo().brandId());
 
         Category category = categoryUseCase.findCategoryExists(request.productInfo().categoryId());
@@ -55,11 +59,13 @@ public class ProductFacade {
 
         ProductInfo productInfo = productInfoUseCase.createProductInfo(brand, category, request.productInfo());
 
-        return productUseCase.createMultipleProduct(productInfo, request.variants(), optionValueMap);
+        List<ProductDto> productDtos = productUseCase.createMultipleProduct(productInfo, request.variants(), optionValueMap);
+
+        return buildProductResponseDto(productInfo, productDtos);
     }
 
     @Transactional
-    public List<ProductDto> updateProduct(Long productInfoId, @Valid ProductUpdateRequestDto request) {
+    public ProductResponseDto updateProduct(Long productInfoId, @Valid ProductUpdateRequestDto request) {
         Brand brand = brandUseCase.findBrandExists(request.productInfo().brandId());
 
         Category category = categoryUseCase.findCategoryExists(request.productInfo().categoryId());
@@ -70,7 +76,9 @@ public class ProductFacade {
 
         ProductInfo productInfo = productInfoUseCase.updateProductInfo(productInfoId, brand, category, request.productInfo());
 
-        return productUseCase.updateMultipleProduct(productInfo, request.variants(), optionValueMap);
+        List<ProductDto> productDtos = productUseCase.updateMultipleProduct(productInfo, request.variants(), optionValueMap);
+
+        return buildProductResponseDto(productInfo, productDtos);
     }
 
     @Transactional
@@ -78,5 +86,12 @@ public class ProductFacade {
         productUseCase.deleteMultipleProduct(productInfoId);
 
         productInfoUseCase.deleteProductInfo(productInfoId);
+    }
+
+    private ProductResponseDto buildProductResponseDto(ProductInfo productInfo, List<ProductDto> productDtos) {
+        return ProductResponseDto.builder()
+                .productInfo(productInfoMapper.toDto(productInfo))
+                .products(productDtos)
+                .build();
     }
 }

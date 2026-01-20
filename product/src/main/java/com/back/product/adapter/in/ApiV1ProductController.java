@@ -22,9 +22,7 @@ public class ApiV1ProductController implements ProductApiController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CommonResponse<ProductResponseDto> createProduct(@Valid @RequestBody ProductCreateRequestDto request) {
-        ProductResponseDto response = ProductResponseDto.builder()
-                .products(productFacade.createProduct(request))
-                .build();
+        ProductResponseDto response = productFacade.createProduct(request);
         return CommonResponse.success(SuccessCode.CREATED, response);
     }
 
@@ -34,9 +32,7 @@ public class ApiV1ProductController implements ProductApiController {
             @PathVariable Long productInfoId,
             @Valid @RequestBody ProductUpdateRequestDto request
     ) {
-        ProductResponseDto response = ProductResponseDto.builder()
-                .products(productFacade.updateProduct(productInfoId, request))
-                .build();
+        ProductResponseDto response = productFacade.updateProduct(productInfoId, request);
         return CommonResponse.success(SuccessCode.OK, response);
     }
 

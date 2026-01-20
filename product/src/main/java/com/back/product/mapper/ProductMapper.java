@@ -16,16 +16,8 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class ProductMapper {
-    private final ProductInfoMapper productInfoMapper;
     private final ProductOptionMapper productOptionMapper;
     private final ProductImageMapper productImageMapper;
-
-    public Product toEntity(ProductInfo productInfo, ProductVariantCreateRequestDto variant) {
-        return Product.builder()
-                .productInfo(productInfo)
-                .inventory(variant.inventory())
-                .build();
-    }
 
     public Product toEntity(ProductInfo productInfo, Long inventory) {
         return Product.builder()
@@ -39,7 +31,7 @@ public class ProductMapper {
         List<String> imageUrlDtos = images.stream().map(productImageMapper::toDto).toList();
 
         return ProductDto.builder()
-                .productInfo(productInfoMapper.toDto(product.getProductInfo()))
+                .productId(product.getId())
                 .inventory(product.getInventory())
                 .options(optionDtos)
                 .imageUrls(imageUrlDtos)
