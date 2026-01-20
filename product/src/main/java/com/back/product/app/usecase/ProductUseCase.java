@@ -27,7 +27,7 @@ public class ProductUseCase {
     private final ProductImageRepository productImageRepository;
 
     @Transactional
-    public List<ProductDto> createProducts(
+    public List<ProductDto> createMultipleProduct(
             ProductInfo productInfo,
             List<ProductVariantCreateRequestDto> variants,
             Map<Long, OptionValue> optionValueMap
