@@ -103,7 +103,7 @@ jobs:
   # Job 3: 변경된 이미지 태그를 Helm Chart에 반영하는 작업
   update-helm-chart:
     name: Update Helm Chart
-    needs: build-and-push # 'build-and-push' job이 성공적으로 끝나야 실행됩니다.
+    needs: [changes, build-and-push] # 'build-and-push' job이 성공적으로 끝나야 실행됩니다.
     if: github.ref == 'refs/heads/main' && github.event_name == 'push' # 'main' 브랜치에 'push' 이벤트가 발생했을 때만 실행합니다.
     runs-on: ubuntu-latest
 
