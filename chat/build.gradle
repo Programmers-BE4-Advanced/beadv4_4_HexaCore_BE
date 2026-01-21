@@ -12,6 +12,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-websocket'
     testImplementation 'org.springframework:spring-messaging'
+    testImplementation "org.wiremock:wiremock-standalone:3.6.0"
 
 
     testImplementation 'org.junit.jupiter:junit-jupiter'
