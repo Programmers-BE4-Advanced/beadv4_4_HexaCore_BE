@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.Locale;
 import java.util.Map;
 
@@ -81,14 +84,22 @@ public class NotificationMessageFactory {
                     }
             );
 
-            case SETTLEMENT_COMPLETED -> new TemplateSpec(
-                    "notification.settlement.completed",
-                    new Object[]{
-                            10, // 정산 월 (임시 하드코딩, 추후 이벤트 값으로 교체 예정)
-                            c.get("endAt"),
-                            c.get("totalNetAmount")
-                    }
-            );
+            case SETTLEMENT_COMPLETED -> {
+                LocalDate startDate = ((LocalDateTime) c.get("startAt")).toLocalDate();
+                LocalDate endDate = ((LocalDateTime) c.get("endAt")).toLocalDate();
+                YearMonth settlementMonth = YearMonth.from(startDate);
+
+                yield new TemplateSpec(
+                        "notification.settlement.completed",
+                        new Object[]{
+                                settlementMonth.getMonthValue(),
+                                java.sql.Date.valueOf(startDate),
+                                java.sql.Date.valueOf(endDate),
+                                c.get("totalNetAmount")
+                        }
+                );
+            }
+
         };
     }
 }
