@@ -11,10 +11,11 @@ public class SettlementFixture {
     public static Settlement createSettlement(
             Long id,
             Long sellerId,
+            String sellerName,
             SettlementStatus status
     ) {
         return createSettlement(
-                id, sellerId, status,
+                id, sellerId, sellerName, status,
                 null,
                 LocalDateTime.now().minusDays(7),
                 LocalDateTime.now(),
@@ -28,6 +29,7 @@ public class SettlementFixture {
     public static Settlement createSettlement(
             Long id,
             Long sellerId,
+            String sellerName,
             SettlementStatus status,
             LocalDateTime expectedAt,
             LocalDateTime startAt,
@@ -39,13 +41,13 @@ public class SettlementFixture {
     ) {
         try {
             Constructor<Settlement> constructor = Settlement.class.getDeclaredConstructor(
-                    Long.class, Long.class, SettlementStatus.class,
+                    Long.class, Long.class, String.class, SettlementStatus.class,
                     LocalDateTime.class, LocalDateTime.class, LocalDateTime.class, LocalDateTime.class,
                     BigDecimal.class, BigDecimal.class, BigDecimal.class
             );
             constructor.setAccessible(true);
             return constructor.newInstance(
-                    id, sellerId, status, expectedAt, startAt, endAt, completedAt,
+                    id, sellerId, sellerName, status, expectedAt, startAt, endAt, completedAt,
                     totalSalesAmount, totalFeeAmount, totalNetAmount
             );
         } catch (Exception e) {
@@ -55,7 +57,7 @@ public class SettlementFixture {
 
     public static Settlement createCompletedSettlement(Long id, Long sellerId) {
         return createSettlement(
-                id, sellerId, SettlementStatus.COMPLETED,
+                id, sellerId, "TestSeller", SettlementStatus.COMPLETED,
                 LocalDateTime.of(2024, 2, 15, 0, 0),
                 LocalDateTime.of(2024, 1, 1, 0, 0),
                 LocalDateTime.of(2024, 1, 31, 23, 59),
@@ -67,6 +69,6 @@ public class SettlementFixture {
     }
 
     public static Settlement createPendingSettlement(Long id, Long sellerId) {
-        return createSettlement(id, sellerId, SettlementStatus.PENDING);
+        return createSettlement(id, sellerId, "TestSeller", SettlementStatus.PENDING);
     }
 }

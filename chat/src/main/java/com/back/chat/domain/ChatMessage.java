@@ -16,7 +16,7 @@ public class ChatMessage extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "room_id", nullable = false, unique = true)
+    @Column(name = "room_id", nullable = false)
     private Long roomId;
 
     @Column(name = "user_id", nullable = false)
@@ -27,6 +27,9 @@ public class ChatMessage extends BaseTimeEntity {
 
     @Column(name = "is_blinded", nullable = false)
     private boolean isBlinded = false;
+
+    @Column(name = "report_count", nullable = false)
+    private int reportCount = 0;
 
     private ChatMessage(
             Long roomId,

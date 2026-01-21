@@ -9,6 +9,7 @@ import lombok.Builder;
 public record SettlementResponse(
         Long settlementId,
         Long sellerId,
+        String sellerName,
         SettlementStatus status,
         LocalDateTime expectedAt,
         LocalDateTime startAt,

@@ -1,5 +1,8 @@
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
     implementation project(path: ':common')
     implementation project(path: ':security')
+
+    testImplementation 'org.springframework.batch:spring-batch-test'
 }

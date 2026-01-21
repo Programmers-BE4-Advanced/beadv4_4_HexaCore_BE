@@ -10,8 +10,15 @@ import com.back.notification.domain.Notification;
 import com.back.notification.domain.NotificationProduct;
 import com.back.notification.domain.enums.NotificationTargetRole;
 import com.back.notification.domain.enums.Type;
+import com.back.notification.dto.NotificationCreatedEvent;
+import com.back.notification.dto.NotificationIdResponseDto;
+import com.back.notification.dto.PushDispatchMessage;
+import com.back.notification.dto.response.NotificationListResponseDto;
+import com.back.notification.dto.response.NotificationResponseDto;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -122,6 +129,54 @@ public class NotificationMapper {
                 ))
                 .deepLink("/products/" + event.productId())     // Todo : 실제 딥링크로 수정
                 .isRead(false)
+                .build();
+    }
+
+    public NotificationCreatedEvent toNotificationCreatedEvent(List<Notification> notifications) {
+        return NotificationCreatedEvent.builder()
+                .notificationIds(notifications
+                        .stream()
+                        .map(Notification::getId)
+                        .toList()
+                )
+                .build();
+    }
+
+    public PushDispatchMessage toPushDispatchMessage(Notification notification, String fcmToken) {
+        return PushDispatchMessage.builder()
+                .title(notification.getTitle())
+                .body(notification.getBody())
+                .deepLink(notification.getDeepLink())
+                .fcmToken(fcmToken)
+                .build();
+    }
+
+    public NotificationIdResponseDto toNotificationIdResponseDto(Notification notification) {
+        return NotificationIdResponseDto.builder()
+                .id(notification.getId())
+                .build();
+    }
+
+    public NotificationListResponseDto toNotificationListResponseDto(Slice<Notification> notifications) {
+        return NotificationListResponseDto.builder()
+                .notificationResponses(
+                        notifications.getContent().stream()
+                                .map(this::toNotificationResponseDto)
+                                .toList()
+                )
+                .hasNext(notifications.hasNext())
+                .build();
+    }
+
+    private NotificationResponseDto toNotificationResponseDto(Notification notification) {
+        return NotificationResponseDto.builder()
+                .id(notification.getId())
+                .title(notification.getTitle())
+                .body(notification.getBody())
+                .deepLink(notification.getDeepLink())
+                .type(notification.getType())
+                .isRead(notification.isRead())
+                .createdAt(notification.getCreatedAt())
                 .build();
     }
 }
