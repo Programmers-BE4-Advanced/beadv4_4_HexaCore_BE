@@ -128,7 +128,7 @@ jobs:
           MODULES_JSON:
             ${{ 
               contains(needs.changes.outputs.modules, '"all"') && 
-              toJSON('["user", "product", "market", "chat", "cash", "notification", "settlement"]') ||
+              '["user", "product", "market", "chat", "cash", "notification", "settlement"]' ||
               needs.changes.outputs.modules 
             }}
         run: |
