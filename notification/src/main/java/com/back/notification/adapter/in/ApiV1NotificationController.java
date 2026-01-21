@@ -1,12 +1,12 @@
 package com.back.notification.adapter.in;
 
+import com.back.common.code.SuccessCode;
 import com.back.common.response.CommonResponse;
 import com.back.notification.app.NotificationFacade;
 import com.back.notification.dto.NotificationIdResponseDto;
 import com.back.notification.dto.response.NotificationListResponseDto;
 import com.back.security.principal.AuthPrincipal;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +26,7 @@ public class ApiV1NotificationController implements NotificationController {
         NotificationListResponseDto response = notificationFacade.getRecentNotifications(
                 authPrincipal.getUserId(), pageNumber, pageSize);
 
-        return CommonResponse.successWithData(HttpStatus.OK, response);
+        return CommonResponse.success(SuccessCode.OK, response);
     }
 
     @Override
@@ -38,6 +38,6 @@ public class ApiV1NotificationController implements NotificationController {
         NotificationIdResponseDto response =
                 notificationFacade.markUserNotificationAsRead(authPrincipal.getUserId(), notificationId);
 
-        return CommonResponse.successWithData(HttpStatus.OK, response);
+        return CommonResponse.success(SuccessCode.OK, response);
     }
 }
