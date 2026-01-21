@@ -45,4 +45,45 @@ public class CashLogSupport {
         cashLogRepository.save(buyerLog);
         cashLogRepository.save(systemLog);
     }
+
+    public void recordUserPgTopUpLog(
+            Wallet buyerWallet,
+            BigDecimal amount,
+            RelType relType,
+            Long relId
+    ) {
+        CashLog userTopUp = CashLog.builder()
+                .wallet(buyerWallet)
+                .amount(amount)
+                .balance(buyerWallet.getBalance())
+                .type(Type.TOPUP_PG)
+                .relType(relType)
+                .relId(relId)
+                .build();
+
+        cashLogRepository.save(userTopUp);
+    }
+
+    public void recordReleaseLog(Wallet buyerWallet, Wallet systemWallet, BigDecimal amount, RelType relType, Long relId) {
+        CashLog buyerLog = CashLog.builder()
+                .wallet(buyerWallet)
+                .amount(amount)
+                .balance(buyerWallet.getBalance())
+                .type(Type.RELEASE)
+                .relType(relType)
+                .relId(relId)
+                .build();
+
+        CashLog systemLog = CashLog.builder()
+                .wallet(systemWallet)
+                .amount(amount.negate())
+                .balance(systemWallet.getBalance())
+                .type(Type.RELEASE)
+                .relType(relType)
+                .relId(relId)
+                .build();
+
+        cashLogRepository.save(buyerLog);
+        cashLogRepository.save(systemLog);
+    }
 }

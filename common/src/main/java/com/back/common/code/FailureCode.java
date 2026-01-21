@@ -56,6 +56,8 @@ public enum FailureCode {
     SETTLEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "SETTLEMENT_NOT_FOUND", "해당 정산서를 찾을 수 없습니다."),
     CHAT_ROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "CHAT_ROOM_NOT_FOUND", "해당 채팅방을 찾을 수 없습니다."),
     WALLET_NOT_FOUND(HttpStatus.NOT_FOUND, "WALLET_NOT_FOUND", "사용자 지갑을 찾을 수 없습니다."),
+    PAYMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "PAYMENT_NOT_FOUND", "결제 정보를 찾을 수 없습니다."),
+    INVALID_CONFIRM(HttpStatus.BAD_REQUEST, "INVALID_CONFIRM", "PG 결제 승인 요청이 유효하지 않습니다."),
     BRAND_NOT_FOUND(HttpStatus.NOT_FOUND, "BRAND_NOT_FOUND", "존재하지 않는 브랜드입니다."),
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY_NOT_FOUND", "존재하지 않는 카테고리입니다."),
     OPTION_VALUE_NOT_FOUND(HttpStatus.NOT_FOUND, "OPTION_VALUE_NOT_FOUND", "존재하지 않는 옵션 값입니다."),
@@ -74,6 +76,7 @@ public enum FailureCode {
     CONFLICT(HttpStatus.CONFLICT, "CONFLICT", "이미 존재하는 리소스입니다."),
     BRAND_NAME_DUPLICATE(HttpStatus.CONFLICT, "BRAND_NAME_DUPLICATE", "이미 존재하는 브랜드 이름입니다."),
     CATEGORY_NAME_DUPLICATE(HttpStatus.CONFLICT, "CATEGORY_NAME_DUPLICATE", "이미 존재하는 카테고리 이름입니다."),
+    PAYMENT_CONFIRM_FAILED(HttpStatus.CONFLICT, "PAYMENT_CONFIRM_FAILED", "결제 승인을 실패했습니다."),
     DUPLICATE_PRODUCT_INFO(HttpStatus.CONFLICT, "DUPLICATE_PRODUCT_INFO", "이미 존재하는 상품 정보입니다."),
     REPORT_DUPLICATE(HttpStatus.CONFLICT, "REPORT_DUPLICATE", "이미 신고한 메시지입니다."),
 
