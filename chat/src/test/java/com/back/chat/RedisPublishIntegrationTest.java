@@ -55,7 +55,7 @@ class RedisPublishIntegrationTest {
         redisMessageListenerContainer.addMessageListener(listener, new ChannelTopic(channel));
 
         // when
-        redisChatMessagePublisher.publish(roomId, payload);
+        redisChatMessagePublisher.publishChatMessage(roomId, payload);
 
         // then
         boolean messageReceived = latch.await(2, TimeUnit.SECONDS);
