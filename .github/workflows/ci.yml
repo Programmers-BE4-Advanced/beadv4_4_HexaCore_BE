@@ -132,10 +132,10 @@ jobs:
               needs.changes.outputs.modules 
             }}
         run: |
-          echo "Modules to update: MODULES_JSON"
+          echo "Modules to update: $MODULES_JSON"
 
           # JSON 배열을 순회하며 각 모듈의 values.yaml 파일을 업데이트합니다.
-          for module in $(echo "MODULES_JSON" | yq -r '.[]'); do
+          for module in $(echo "$MODULES_JSON" | yq -r '.[]'); do
             # 각 모듈에 맞는 values.yaml 파일 경로를 동적으로 설정합니다.
             VALUES_FILE="applications/$module/values.yaml"
             echo "Checking for $VALUES_FILE..."
