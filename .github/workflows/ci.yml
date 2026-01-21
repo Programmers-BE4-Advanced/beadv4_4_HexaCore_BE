@@ -48,13 +48,14 @@ jobs:
 
   # Job 2: 변경된 각 모듈에 대해 이미지를 빌드하고 푸시하는 작업
   build-and-push:
+    name: ${{ matrix.module }} / ${{ github.event_name == 'push' && 'Build & Push' || 'Build-only' }}
     needs: changes # 'changes' job이 성공적으로 끝나야 이 job이 실행됩니다.
     if: ${{ needs.changes.outputs.modules != '[]' && needs.changes.outputs.modules != '' }} # 변경된 모듈이 있을 때만 실행합니다.
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write # GHCR에 패키지(이미지)를 쓰기 위해 필요
-    
+
     strategy:
       fail-fast: false # 하나의 빌드가 실패해도 다른 빌드는 계속 진행합니다.
       matrix:
@@ -82,15 +83,19 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Convert repository owner to lowercase
+        id: string
+        run: echo "lowercase_owner=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: . # <--- 빌드 컨텍스트를 프로젝트 루트로 변경
-          file: ./${{ matrix.module }}/Dockerfile # <--- Dockerfile 경로는 루트 기준 상대 경로
-          push: true
-          build-args: | # <--- Dockerfile에 빌드 인자 전달
+          context: .
+          file: ./Dockerfile
+          push: ${{ github.event_name == 'push' }}
+          build-args: |
             MODULE_NAME=${{ matrix.module }}
-          tags: ghcr.io/${{ github.repository_owner }}/${{ matrix.module }}:${{ github.sha }}
+          tags: ghcr.io/${{ steps.string.outputs.lowercase_owner }}/${{ matrix.module }}:${{ github.sha }}
           labels: |
             org.opencontainers.image.source=${{ github.repositoryUrl }}
             org.opencontainers.image.revision=${{ github.sha }}
