@@ -45,6 +45,7 @@ public enum FailureCode {
      */
     FORBIDDEN(HttpStatus.FORBIDDEN, "FORBIDDEN", "접근 권한이 없습니다."),
     SETTLEMENT_ACCESS_DENIED(HttpStatus.FORBIDDEN, "SETTLEMENT_ACCESS_DENIED", "해당 정산 내역에 접근 권한이 없습니다."),
+    CHAT_RESTRICTED(HttpStatus.FORBIDDEN, "CHAT_RESTRICTED", "채팅이 제한된 사용자입니다."),
 
     /**
      * 404 Not Found
