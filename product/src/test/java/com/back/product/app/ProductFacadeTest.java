@@ -26,7 +26,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@Transactional
 @DisplayName("ProductFacade 통합 테스트")
 class ProductFacadeTest {
 
