@@ -111,12 +111,11 @@ jobs:
       - name: Checkout Helm chart repository
         uses: actions/checkout@v4
         with:
+          # Helm Chart 레포지토리 소유자와 이름을 GitHub Secrets에서 가져옵니다.
           repository: ${{ secrets.HELM_REPO_OWNER }}/${{ secrets.HELM_REPO_NAME }}
+          # Helm Chart 레포지토리에 Push 권한이 있는 PAT(Personal Access Token)를 사용해야 합니다.
           token: ${{ secrets.HELM_REPO_PAT }}
-      # -- 디버깅--
-      - name: Show file structire after checkout
-        run: ls -R
-        
+
       - name: Install yq
         run: sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 && sudo chmod +x /usr/local/bin/yq
 
@@ -124,45 +123,42 @@ jobs:
         id: string
         run: echo "lowercase_owner=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
 
-      - name: Update image tags in values.yaml (with debugging)
-        id: update_tags
+      - name: Update image tags in values.yaml
+        env:
+          MODULES_JSON:
+            ${{ 
+              contains(needs.changes.outputs.modules, '"all"') && 
+              toJSON('["user", "product", "market", "chat", "cash", "notification", "settlement"]') ||
+              needs.changes.outputs.modules 
+            }}
         run: |
-          modules_json='${{ contains(needs.changes.outputs.modules, '"all"') && toJSON('["user", "product", "market", "chat", "cash", "notification", "settlement"]') || needs.changes.outputs.modules }}'
-          echo "Modules to update: $modules_json"
+          echo "Modules to update: MODULES_JSON"
 
-          for module in $(echo "$modules_json" | yq -r '.[]'); do
+          # JSON 배열을 순회하며 각 모듈의 values.yaml 파일을 업데이트합니다.
+          for module in $(echo "MODULES_JSON" | yq -r '.[]'); do
+            # 각 모듈에 맞는 values.yaml 파일 경로를 동적으로 설정합니다.
             VALUES_FILE="applications/$module/values.yaml"
-            echo "--- Debugging for $module ---"
+            echo "Checking for $VALUES_FILE..."
+
+            # 해당 모듈의 values.yaml 파일이 존재하는지 확인합니다.
             if [ -f "$VALUES_FILE" ]; then
-              echo "File found: $VALUES_FILE"
-              echo "Tag value BEFORE: $(yq '.image.tag' $VALUES_FILE)"
-              
-              # yq 명령 실행
+              echo "Updating image tag in $VALUES_FILE to ${{ github.sha }}"
+              # values.yaml 파일 내의 image.tag 값을 직접 업데이트합니다.
               yq -i ".image.tag = \"${{ github.sha }}\"" $VALUES_FILE
-              
-              echo "Tag value AFTER: $(yq '.image.tag' $VALUES_FILE)"
-              echo "--- End Debugging for $module ---"
+
+              레포지토리 주소도 업데이트가 필요하다면 아래 주석을 해제하고 사용하세요.
+              yq -i ".image.repository = \"ghcr.io/${{ steps.string.outputs.lowercase_owner }}/$module\"" $VALUES_FILE
             else
-              echo "Warning: $VALUES_FILE not found."
+              echo "Warning: $VALUES_FILE not found. Skipping update for $module."
             fi
           done
 
-      - name: Commit and push changes (with debugging)
+      - name: Commit and push changes
         run: |
-          echo "--- Git Status Before Add ---"
-          git status
-          echo "--- Git Diff Before Add ---"
-          git diff
-
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add .
-
-          echo "--- Git Status After Add ---"
-          git status
-          echo "--- Git Diff Staged ---"
-          git diff --staged
-
+          # 변경 사항이 있을 때만 커밋하고 푸시합니다. (오타 수정: --staded -> --staged)
           if ! git diff --staged --quiet; then
             git commit -m "Update image tags to ${{ github.sha }} for changed services"
             git push
