@@ -1,10 +1,13 @@
 rootProject.name = 'resello'
 
-include('cash')
-include('chat')
-include('common')
-include('market')
-include('member')
-include('notification')
-include('product')
-include('settlement')
+include(
+        "common",
+        "notification",
+        "cash",
+        "chat",
+        "market",
+        "user",
+        "product",
+        "settlement",
+        "security"
+)

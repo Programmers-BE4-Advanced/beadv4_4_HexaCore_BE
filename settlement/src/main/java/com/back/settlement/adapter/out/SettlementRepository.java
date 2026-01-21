@@ -1,0 +1,14 @@
+package com.back.settlement.adapter.out;
+
+import com.back.settlement.domain.Settlement;
+import com.back.settlement.domain.SettlementStatus;
+import java.util.List;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface SettlementRepository extends JpaRepository<Settlement, Long> {
+
+    List<Settlement> findBySellerId(Long sellerId);
+
+    List<Settlement> findByStatus(SettlementStatus status, Pageable pageable);
+}
