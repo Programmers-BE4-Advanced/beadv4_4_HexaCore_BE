@@ -113,7 +113,10 @@ jobs:
         with:
           repository: ${{ secrets.HELM_REPO_OWNER }}/${{ secrets.HELM_REPO_NAME }}
           token: ${{ secrets.HELM_REPO_PAT }}
-
+      # -- 디버깅--
+      - name: Show file structire after checkout
+        run: ls -R
+        
       - name: Install yq
         run: sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 && sudo chmod +x /usr/local/bin/yq
 
