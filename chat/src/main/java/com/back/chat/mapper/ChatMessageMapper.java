@@ -1,6 +1,7 @@
 package com.back.chat.mapper;
 
 import com.back.chat.domain.ChatMessage;
+import com.back.chat.domain.ChatMessageBlindPolicy;
 import com.back.chat.dto.response.ChatMessageHistoryResponseDto;
 import com.back.chat.dto.response.ChatMessageReportResponseDto;
 
@@ -21,7 +22,7 @@ public class ChatMessageMapper {
         return new ChatMessageHistoryResponseDto.ChatMessageItemDto(
                 m.getId(),
                 m.getUserId(),
-                m.isBlinded() ? "블라인드된 메시지입니다." : m.getContent(),
+                m.getContent(),
                 m.isBlinded(),
                 m.getCreatedAt()
         );
