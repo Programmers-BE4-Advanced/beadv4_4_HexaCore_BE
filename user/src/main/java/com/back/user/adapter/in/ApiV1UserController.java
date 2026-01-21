@@ -6,6 +6,7 @@ import com.back.security.principal.AuthPrincipal;
 import com.back.user.app.UserFacade;
 import com.back.user.dto.request.UpdateFcmTokenRequest;
 import com.back.user.dto.response.UserIdResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -22,7 +23,7 @@ public class ApiV1UserController implements UserApiV1 {
     @Override
     @PatchMapping("/me/fcm-token")
     public CommonResponse<UserIdResponse> registerOrUpdateFcmToken(@AuthenticationPrincipal AuthPrincipal authPrincipal,
-                                                      @RequestBody UpdateFcmTokenRequest request) {
+                                                      @Valid @RequestBody UpdateFcmTokenRequest request) {
         UserIdResponse response = userFacade.registerOrUpdateFcmToken(authPrincipal.getUserId(), request);
         return CommonResponse.success(SuccessCode.OK, response);
     }
