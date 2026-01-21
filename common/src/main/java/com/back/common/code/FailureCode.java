@@ -57,6 +57,7 @@ public enum FailureCode {
     BRAND_NOT_FOUND(HttpStatus.NOT_FOUND, "BRAND_NOT_FOUND", "존재하지 않는 브랜드입니다."),
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY_NOT_FOUND", "존재하지 않는 카테고리입니다."),
     OPTION_VALUE_NOT_FOUND(HttpStatus.NOT_FOUND, "OPTION_VALUE_NOT_FOUND", "존재하지 않는 옵션 값입니다."),
+    PRODUCT_INFO_NOT_FOUND(HttpStatus.NOT_FOUND, "PRODUCT_INFO_NOT_FOUND", "존재하지 않는 상품 기본 정보입니다."),
     CHAT_MESSAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "CHAT_MESSAGE_NOT_FOUND", "해당 메시지를 찾을 수 없습니다."),
 
     /**

@@ -56,7 +56,7 @@ public class ProductInfoUseCase {
     @Transactional
     public void deleteProductInfo(Long productInfoId) {
         ProductInfo productInfo = productSupport.findProductInfoById(productInfoId)
-                .orElseThrow(() -> new CustomException(FailureCode.PRODUCT_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(FailureCode.PRODUCT_INFO_NOT_FOUND));
 
         productInfoRepository.delete(productInfo);
     }
