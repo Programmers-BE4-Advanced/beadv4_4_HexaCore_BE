@@ -6,6 +6,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -23,5 +24,11 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2025.1.0"
+    }
 }
 
