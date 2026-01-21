@@ -11,6 +11,7 @@ import com.back.notification.domain.NotificationProduct;
 import com.back.notification.domain.enums.NotificationTargetRole;
 import com.back.notification.domain.enums.Type;
 import com.back.notification.dto.NotificationCreatedEvent;
+import com.back.notification.dto.NotificationIdResponseDto;
 import com.back.notification.dto.PushDispatchMessage;
 import org.springframework.stereotype.Component;
 
@@ -144,6 +145,12 @@ public class NotificationMapper {
                 .body(notification.getBody())
                 .deepLink(notification.getDeepLink())
                 .fcmToken(fcmToken)
+                .build();
+    }
+
+    public NotificationIdResponseDto toNotificationIdResponseDto(Notification notification) {
+        return NotificationIdResponseDto.builder()
+                .id(notification.getId())
                 .build();
     }
 }
