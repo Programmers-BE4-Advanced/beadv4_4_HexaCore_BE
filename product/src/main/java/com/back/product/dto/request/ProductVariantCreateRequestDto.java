@@ -3,10 +3,12 @@ package com.back.product.dto.request;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import org.hibernate.validator.constraints.URL;
 
 import java.util.List;
 
+@Builder
 public record ProductVariantCreateRequestDto(
         @NotEmpty(message = "Option values for variant cannot be empty")
         List<Long> optionValueIds,
