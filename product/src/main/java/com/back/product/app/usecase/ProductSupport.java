@@ -85,7 +85,7 @@ public class ProductSupport {
     @Transactional(readOnly = true)
     public List<Product> getAllProductsByProductInfoId(Long productInfoId) {
         ProductInfo productInfo = productInfoRepository.findById(productInfoId)
-                .orElseThrow(() -> new CustomException(FailureCode.PRODUCT_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(FailureCode.PRODUCT_INFO_NOT_FOUND));
 
         return productRepository.findAllByProductInfo(productInfo);
     }
