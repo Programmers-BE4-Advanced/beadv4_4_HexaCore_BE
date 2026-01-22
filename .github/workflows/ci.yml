@@ -87,6 +87,9 @@ jobs:
         id: string
         run: echo "lowercase_owner=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
 
+      - name: Set project name
+        run: echo "PROJECT_NAME=$(echo '${{github.repository}}' | awk -F'/' '{print $2}')" >> $GITHUB_ENV
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
@@ -95,7 +98,7 @@ jobs:
           push: ${{ github.event_name == 'push' }}
           build-args: |
             MODULE_NAME=${{ matrix.module }}
-          tags: ghcr.io/${{ steps.string.outputs.lowercase_owner }}/${{ matrix.module }}:${{ github.sha }}
+          tags: ghcr.io/${{ steps.string.outputs.lowercase_owner }}/${{ env.PROJECT_NAME }}-${{ matrix.module }}:${{ github.sha }}
           labels: |
             org.opencontainers.image.source=${{ github.repositoryUrl }}
             org.opencontainers.image.revision=${{ github.sha }}
@@ -123,6 +126,9 @@ jobs:
         id: string
         run: echo "lowercase_owner=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
 
+      - name: Set project name
+        run: echo "PROJECT_NAME=$(echo '${{github.repository}}' | awk -F'/' '{print $2}')" >> $GITHUB_ENV
+        
       - name: Update image tags in values.yaml
         env:
           MODULES_JSON:
@@ -147,7 +153,7 @@ jobs:
               yq -i ".image.tag = \"${{ github.sha }}\"" $VALUES_FILE
 
               # 레포지토리 주소도 업데이트가 필요하다면 아래 주석을 해제하고 사용하세요.
-              yq -i ".image.repository = \"ghcr.io/${{ steps.string.outputs.lowercase_owner }}/${{github.repository}}/$module\"" $VALUES_FILE
+              yq -i ".image.repository = \"ghcr.io/${{ steps.string.outputs.lowercase_owner }}/${{ env.PROJECT_NAME }}-$module\"" $VALUES_FILE
             else
               echo "Warning: $VALUES_FILE not found. Skipping update for $module."
             fi
